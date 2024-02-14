@@ -1,11 +1,11 @@
 package com.booleanuk.api.controller;
 
 import com.booleanuk.api.model.Game;
+import com.booleanuk.api.model.User;
 import com.booleanuk.api.repository.GameRepository;
-import com.booleanuk.api.response.ErrorResponse;
-import com.booleanuk.api.response.GameListResponse;
-import com.booleanuk.api.response.GameResponse;
-import com.booleanuk.api.response.Response;
+import com.booleanuk.api.repository.RentRepository;
+import com.booleanuk.api.repository.UserRepository;
+import com.booleanuk.api.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +18,21 @@ public class GameController {
     @Autowired
     private GameRepository gameRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private RentRepository rentRepository;
+
     @GetMapping
     public ResponseEntity<GameListResponse> getAllGames() {
-        GameListResponse bookListResponse = new GameListResponse();
-        bookListResponse.set(this.gameRepository.findAll());
-        return ResponseEntity.ok(bookListResponse);
+        GameListResponse gameListResponse = new GameListResponse();
+        gameListResponse.set(this.gameRepository.findAll());
+        return ResponseEntity.ok(gameListResponse);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Response<?>> getGamesById(@PathVariable int id) {
+    public ResponseEntity<Response<?>> getGameById(@PathVariable int id) {
         Game game = this.gameRepository.findById(id).orElse(null);
         if (game == null) {
             ErrorResponse error = new ErrorResponse();
@@ -38,6 +44,19 @@ public class GameController {
         return ResponseEntity.ok(gameResponse);
     }
 
+    @GetMapping("/{id}/rents")
+    public ResponseEntity<Response<?>> getRents(@PathVariable int id) {
+        Game game = this.gameRepository.findById(id).orElse(null);
+        if (game == null) {
+            ErrorResponse error = new ErrorResponse();
+            error.set("not found");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+        RentListResponse rentListResponse = new RentListResponse();
+        rentListResponse.set(game.getRents());
+        return ResponseEntity.ok(rentListResponse);
+    }
+
     @PostMapping
     public ResponseEntity<Response<?>> createGame(@RequestBody Game game) {
         //Check the fields
@@ -46,9 +65,7 @@ public class GameController {
             error.set("Fill in required fields");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
-
         this.gameRepository.save(game);
-
         GameResponse gameResponse = new GameResponse();
         gameResponse.set(game);
         return ResponseEntity.ok(gameResponse);
@@ -73,10 +90,11 @@ public class GameController {
         gameToUpdate.setGenre(game.getGenre());
         gameToUpdate.setAgeRating(game.getAgeRating());
         gameToUpdate.setNumPlayers(game.getNumPlayers());
+        gameToUpdate.setBorrowed(game.isBorrowed());
 
         this.gameRepository.save(gameToUpdate);
         GameResponse gameResponse = new GameResponse();
-        gameResponse.set(game);
+        gameResponse.set(gameToUpdate);
         return ResponseEntity.ok(gameResponse);
     }
 
@@ -88,7 +106,11 @@ public class GameController {
             error.set("not found");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
-
+        if(gameToDelete.isBorrowed()){
+            ErrorResponse error = new ErrorResponse();
+            error.set("Bad request, game is currently borrowed");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
         this.gameRepository.delete(gameToDelete);
         GameResponse gameResponse = new GameResponse();
         gameResponse.set(gameToDelete);

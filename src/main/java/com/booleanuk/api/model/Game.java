@@ -1,9 +1,12 @@
 package com.booleanuk.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -29,11 +32,22 @@ public class Game {
     @Column(name = "genre")
     private String genre;
 
-    public Game(String title, String gameStudio, String ageRating, int numPlayers, String genre) {
+    @Column(name = "is_borrowed")
+    private boolean isBorrowed;
+
+    @OneToMany(mappedBy = "game")
+    @JsonIgnore
+    private List<Rent> rents;
+
+    public Game(String title, String gameStudio, String ageRating, int numPlayers, String genre, boolean isBorrowed) {
         this.title = title;
         this.gameStudio = gameStudio;
         this.ageRating = ageRating;
         this.numPlayers = numPlayers;
         this.genre = genre;
+        this.isBorrowed = isBorrowed;
+    }
+    public Game(int id){
+        this.id = id;
     }
 }
