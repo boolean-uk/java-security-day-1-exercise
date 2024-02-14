@@ -31,4 +31,8 @@ public class Game {
         this.age = age;
         this.genre = genre;
     }
+
+    private Game(int id) {
+        this.id = id;
+    }
 }
