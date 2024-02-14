@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+
 
 @RestController
 @RequestMapping("games")
@@ -38,7 +38,6 @@ public class GameController {
         return ResponseEntity.ok(gameResponse);
     }
 
-
     @PostMapping
     public ResponseEntity<Response<?>> createGame(@RequestBody Game game) {
         //Check the fields
@@ -54,4 +53,45 @@ public class GameController {
         gameResponse.set(game);
         return ResponseEntity.ok(gameResponse);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Response<?>> updateAGame(@PathVariable int id,@RequestBody Game game){
+        Game gameToUpdate = this.gameRepository.findById(id).orElse(null);
+        if (gameToUpdate ==null){
+            ErrorResponse error = new ErrorResponse();
+            error.set("not found");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+        //Check the fields
+        if(game.getTitle().isEmpty() || game.getAgeRating().isEmpty()|| game.getGameStudio().isEmpty() || game.getGenre().isEmpty() || game.getNumPlayers()<=0){
+            ErrorResponse error = new ErrorResponse();
+            error.set("Fill in required fields");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+        gameToUpdate.setTitle(game.getTitle());
+        gameToUpdate.setGameStudio(game.getGameStudio());
+        gameToUpdate.setGenre(game.getGenre());
+        gameToUpdate.setAgeRating(game.getAgeRating());
+        gameToUpdate.setNumPlayers(game.getNumPlayers());
+
+        this.gameRepository.save(gameToUpdate);
+        GameResponse gameResponse = new GameResponse();
+        gameResponse.set(game);
+        return ResponseEntity.ok(gameResponse);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Response<?>> deleteAGame(@PathVariable int id){
+        Game gameToDelete = this.gameRepository.findById(id).orElse(null);
+        if (gameToDelete ==null){
+            ErrorResponse error = new ErrorResponse();
+            error.set("not found");
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+        }
+
+        this.gameRepository.delete(gameToDelete);
+        GameResponse gameResponse = new GameResponse();
+        gameResponse.set(gameToDelete);
+        return ResponseEntity.ok(gameResponse);}
+
 }
