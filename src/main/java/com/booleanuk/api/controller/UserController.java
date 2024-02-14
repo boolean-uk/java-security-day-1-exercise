@@ -32,4 +32,17 @@ public class UserController {
         createdUser.setBorrowedGames(new ArrayList<>());
         return new ResponseEntity<>(new Response<>(createdUser), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<Response<User>> delete(@PathVariable int id) {
+        User user = this.repository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "not found"));
+        try {
+            this.repository.delete(user);
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "User still has game borrowed");
+        }
+        user.setBorrowedGames(new ArrayList<>());
+        return ResponseEntity.ok(new Response<>(user));
+    }
 }

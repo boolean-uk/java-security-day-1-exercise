@@ -33,4 +33,17 @@ public class GameController {
         createdGame.setBorrowedGames(new ArrayList<>());
         return new ResponseEntity<>(new Response<>(createdGame), HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    public  ResponseEntity<Response<Game>> delete(@PathVariable int id) {
+        Game game = this.repository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "not found"));
+        try {
+            this.repository.delete(game);
+        } catch (Exception e) {
+            throw new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, "Game is still being borrowed");
+        }
+        game.setBorrowedGames(new ArrayList<>());
+        return ResponseEntity.ok(new Response<>(game));
+    }
 }
