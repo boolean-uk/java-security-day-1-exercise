@@ -1,6 +1,8 @@
 package com.booleanuk.library.controller;
 
+import com.booleanuk.library.model.Loan;
 import com.booleanuk.library.model.VideoGame;
+import com.booleanuk.library.repository.LoanRepository;
 import com.booleanuk.library.repository.VideoGameRepository;
 import com.booleanuk.library.response.ErrorResponse;
 import com.booleanuk.library.response.Response;
@@ -16,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class VideoGameController {
     @Autowired
     private VideoGameRepository videoGameRepository;
+    @Autowired
+    private LoanRepository loanRepository;
 
     @GetMapping
     public ResponseEntity<VideoGameListResponse> getAllVideoGames() {
@@ -39,7 +43,7 @@ public class VideoGameController {
 
     @PostMapping
     public ResponseEntity<Response<?>> createVideoGame(@RequestBody VideoGame videoGame) {
-        if (areAnyFieldsBad(videoGame)) {
+        if (this.areAnyFieldsBad(videoGame)) {
             ErrorResponse error = new ErrorResponse();
             error.set("bad request");
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
@@ -52,12 +56,16 @@ public class VideoGameController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Response<?>> deleteVideoGame(@PathVariable int id) {
-        if (doesVideoGameIDNotExist(id)) {
+        if (this.doesVideoGameIDNotExist(id)) {
             ErrorResponse error = new ErrorResponse();
             error.set("not found");
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
+
         VideoGame videoGameToDelete = this.getVideoGameByID(id);
+        if (videoGameToDelete.getLoan() != null) {
+           this.loanRepository.delete(videoGameToDelete.getLoan());
+        }
         this.videoGameRepository.delete(videoGameToDelete);
         VideoGameResponse videoGameResponse = new VideoGameResponse();
         videoGameResponse.set(videoGameToDelete);
@@ -97,7 +105,6 @@ public class VideoGameController {
         videoGameResponse.set(videoGameToUpdate);
         return new ResponseEntity<>(videoGameResponse, HttpStatus.CREATED);
     }
-
 
     private boolean doesVideoGameIDNotExist(int id) {
         for (VideoGame videoGame : this.videoGameRepository.findAll()) {

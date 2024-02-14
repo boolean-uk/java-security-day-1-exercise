@@ -1,5 +1,6 @@
 package com.booleanuk.library.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,9 +25,7 @@ public class User {
     @Column(name = "phone")
     private String phone;
 
-    @Column(name = "borrowed_games")
-    private List<VideoGame> borrowedGames;
-
-    @Column(name = "prev_borrowed")
-    private List<VideoGame> prevBorrowed;
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties("user")
+    private List<Loan> loanedGames;
 }
