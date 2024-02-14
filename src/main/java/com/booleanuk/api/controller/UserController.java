@@ -3,14 +3,13 @@ package com.booleanuk.api.controller;
 import com.booleanuk.api.model.User;
 import com.booleanuk.api.model.VideoGame;
 import com.booleanuk.api.repository.UserRepository;
-import com.booleanuk.response.ErrorResponse;
-import com.booleanuk.response.Response;
-import com.booleanuk.response.UserListResponse;
-import com.booleanuk.response.UserResponse;
+import com.booleanuk.api.repository.VideoGameRepository;
+import com.booleanuk.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +21,14 @@ public class UserController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private VideoGameRepository videoGameRepository;
+
     @GetMapping
     public ResponseEntity<UserListResponse> getAllUsers() {
-        List<User> authors = this.userRepository.findAll();
+        List<User> users = this.userRepository.findAll();
         UserListResponse userListResponse = new UserListResponse();
-        userListResponse.set(authors);
+        userListResponse.set(users);
         return ResponseEntity.ok(userListResponse);
     }
 
@@ -101,5 +103,101 @@ public class UserController {
         userResponse.set(userToDelete);
         return ResponseEntity.ok(userResponse);
     }
+
+    //Extension - Borrow game
+    @PostMapping("/{userId}/borrow/{gameId}")
+    public ResponseEntity<Response<?>> borrowGame(@PathVariable int userId, @PathVariable int gameId) {
+        User user = userRepository.findById(userId).orElse(null);
+        VideoGame videoGame = videoGameRepository.findById(gameId).orElse(null);
+        if (user == null || videoGame == null || videoGame.isBorrowed()) {
+            ErrorResponse error = new ErrorResponse();
+            error.set("Game cannot be borrowed");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+        videoGame.setBorrowed(true);
+        videoGame.setCurrentBorrower(user);
+
+        //Save users in list that have borrowed this game
+        videoGame.getUserGameBorrowers().add(user);
+
+        this.videoGameRepository.save(videoGame);
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.set(user);
+        return new ResponseEntity<>(userResponse, HttpStatus.CREATED);
+    }
+
+    //Extension - Return game
+    @PostMapping("/{userId}/return/{gameId}")
+    public ResponseEntity<Response<?>> returnGame(@PathVariable int userId, @PathVariable int gameId) {
+        VideoGame videoGame = videoGameRepository.findById(gameId).orElse(null);
+        if (videoGame == null || !videoGame.isBorrowed() || videoGame.getUser().getId() != userId) {
+            ErrorResponse error = new ErrorResponse();
+            error.set("Game cannot be returned");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+        videoGame.setBorrowed(false);
+        videoGame.setCurrentBorrower(null);
+        this.videoGameRepository.save(videoGame);
+
+        VideoGameResponse videoGameResponse = new VideoGameResponse();
+        videoGameResponse.set(videoGame);
+        return ResponseEntity.ok(videoGameResponse);
+    }
+
+    //Extension - Who is currently borrowing a game
+    @GetMapping("/borrowing/{id}")
+    public ResponseEntity<Response<?>> getUserBorrowingGame(@PathVariable int id) {
+        VideoGame videoGame = this.videoGameRepository.findById(id).orElse(null);
+
+        if(videoGame == null) {
+            ErrorResponse error = new ErrorResponse();
+            error.set("No video game matching that id were found");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        User user = videoGame.getCurrentBorrower();
+
+        UserResponse userResponse = new UserResponse();
+        userResponse.set(user);
+        return ResponseEntity.ok(userResponse);
+    }
+
+    //Extension - Get users who have borrowed a game
+    @GetMapping("/users/borrowed/{id}")
+    public ResponseEntity<Response<?>> getUsersWhoHaveBorrowedGame(@PathVariable int id) {
+        VideoGame videoGame = this.videoGameRepository.findById(id).orElse(null);
+
+        if(videoGame == null) {
+            ErrorResponse error = new ErrorResponse();
+            error.set("No video game matching that id were found");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        List<User> users = videoGame.getUserGameBorrowers();
+
+        UserListResponse userListResponse = new UserListResponse();
+        userListResponse.set(users);
+        return new ResponseEntity<>(userListResponse, HttpStatus.CREATED);
+    }
+
+    //Extension - Get games borrowed by a user
+    @GetMapping("/users/{id}/borrowed")
+    public ResponseEntity<Response<?>> getGamesBorrowedByAUser(@PathVariable int id) {
+        User user = userRepository.findById(id).orElse(null);
+
+        if(user == null) {
+            ErrorResponse error = new ErrorResponse();
+            error.set("No user matching that id were found");
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        List<VideoGame> videoGamesBorrowed = user.getVideoGames();
+
+        VideoGameListResponse videoGameListResponse = new VideoGameListResponse();
+        videoGameListResponse.set(videoGamesBorrowed);
+        return new ResponseEntity<>(videoGameListResponse, HttpStatus.CREATED);
+    }
+
 
 }

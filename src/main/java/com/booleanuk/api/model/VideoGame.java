@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,6 +42,15 @@ public class VideoGame {
     @JoinColumn(name = "user_id", nullable = false )
     @JsonIncludeProperties(value = {"id","name", "location"})
     private User user;
+
+
+    private boolean borrowed;
+
+
+    private User currentBorrower;
+
+
+    private List<User> userGameBorrowers;
 
     private VideoGame(int id) {
         this.id = id;

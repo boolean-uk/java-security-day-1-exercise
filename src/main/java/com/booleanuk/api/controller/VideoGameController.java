@@ -4,10 +4,7 @@ import com.booleanuk.api.model.User;
 import com.booleanuk.api.model.VideoGame;
 import com.booleanuk.api.repository.UserRepository;
 import com.booleanuk.api.repository.VideoGameRepository;
-import com.booleanuk.response.ErrorResponse;
-import com.booleanuk.response.Response;
-import com.booleanuk.response.VideoGameListResponse;
-import com.booleanuk.response.VideoGameResponse;
+import com.booleanuk.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -116,7 +113,7 @@ public class VideoGameController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Response<?>> deleteAuthor(@PathVariable int id) {
+    public ResponseEntity<Response<?>> deleteUser(@PathVariable int id) {
         VideoGame videoGameToDelete = this.videoGameRepository.findById(id).orElse(null);
 
         if(videoGameToDelete == null ) {
