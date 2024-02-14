@@ -39,24 +39,31 @@ public class VideoGame {
     private int ageRating;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false )
-    @JsonIncludeProperties(value = {"id","name", "location"})
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIncludeProperties(value = {"id", "name", "phone", "email"})
     private User user;
 
-
+    @Column
     private boolean borrowed;
 
-
+    @ManyToOne
+    @JoinColumn(name = "current_borrower_id")
+    @JsonIncludeProperties(value = {"id", "name", "phone", "email"})
     private User currentBorrower;
 
-
+    @ManyToMany
+    @JoinTable(
+            name = "game_borrowings",
+            joinColumns = @JoinColumn(name = "game_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> userGameBorrowers;
 
     private VideoGame(int id) {
         this.id = id;
     }
 
-    public VideoGame(String title, String genre, String developer, String publisher, int year, int ageRating, User user) {
+    public VideoGame(String title, String genre, String developer, String publisher, int year, int ageRating, User user, boolean borrowed, User currentBorrower, List<User> userGameBorrowers) {
         this.title = title;
         this.genre = genre;
         this.developer = developer;
@@ -64,5 +71,8 @@ public class VideoGame {
         this.year = year;
         this.ageRating = ageRating;
         this.user = user;
+        this.borrowed = borrowed;
+        this.currentBorrower = currentBorrower;
+        this.userGameBorrowers = userGameBorrowers;
     }
 }

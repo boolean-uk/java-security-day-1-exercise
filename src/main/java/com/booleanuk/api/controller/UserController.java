@@ -117,8 +117,10 @@ public class UserController {
         videoGame.setBorrowed(true);
         videoGame.setCurrentBorrower(user);
 
-        //Save users in list that have borrowed this game
+        //Save specific user in list that have borrowed this specific game
+        //Saves specific game in a list borrowed by a specific user
         videoGame.getUserGameBorrowers().add(user);
+        user.getBorrowedGames().add(videoGame);
 
         this.videoGameRepository.save(videoGame);
 
@@ -164,7 +166,7 @@ public class UserController {
     }
 
     //Extension - Get users who have borrowed a game
-    @GetMapping("/users/borrowed/{id}")
+    @GetMapping("/borrowed/{id}")
     public ResponseEntity<Response<?>> getUsersWhoHaveBorrowedGame(@PathVariable int id) {
         VideoGame videoGame = this.videoGameRepository.findById(id).orElse(null);
 
@@ -182,7 +184,7 @@ public class UserController {
     }
 
     //Extension - Get games borrowed by a user
-    @GetMapping("/users/{id}/borrowed")
+    @GetMapping("/{id}/borrowed")
     public ResponseEntity<Response<?>> getGamesBorrowedByAUser(@PathVariable int id) {
         User user = userRepository.findById(id).orElse(null);
 
@@ -192,7 +194,7 @@ public class UserController {
             return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
         }
 
-        List<VideoGame> videoGamesBorrowed = user.getVideoGames();
+        List<VideoGame> videoGamesBorrowed = user.getBorrowedGames();
 
         VideoGameListResponse videoGameListResponse = new VideoGameListResponse();
         videoGameListResponse.set(videoGamesBorrowed);

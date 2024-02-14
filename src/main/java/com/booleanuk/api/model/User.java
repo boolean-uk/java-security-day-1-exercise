@@ -32,9 +32,23 @@ public class User {
     @JsonIgnoreProperties(value = {"id", "user"})
     public List<VideoGame> videoGames;
 
+    @ManyToMany(mappedBy = "userGameBorrowers")
+    @JsonIgnoreProperties(value = {"id", "user"})
+    private List<VideoGame> borrowedGames;
+
     public User(String name, String phone, String email) {
         this.name = name;
         this.phone = phone;
         this.email = email;
+    }
+
+    public void addBorrowedGame(VideoGame game) {
+        borrowedGames.add(game);
+        game.getUserGameBorrowers().add(this);
+    }
+
+    public void removeBorrowedGame(VideoGame game) {
+        borrowedGames.remove(game);
+        game.getUserGameBorrowers().remove(this);
     }
 }
