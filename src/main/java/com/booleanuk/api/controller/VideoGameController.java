@@ -1,6 +1,7 @@
 package com.booleanuk.api.controller;
 
 import com.booleanuk.api.model.VideoGame;
+import com.booleanuk.api.repository.UserRepository;
 import com.booleanuk.api.repository.VideoGameRepository;
 import com.booleanuk.api.response.ErrorResponse;
 import com.booleanuk.api.response.Response;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 public class VideoGameController {
     @Autowired
     private VideoGameRepository repository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping
     public ResponseEntity<VideoGameListResponse> getAllVideoGames() {
@@ -99,4 +103,5 @@ public class VideoGameController {
         videoGameResponse.set(videoGameToDelete);
         return ResponseEntity.ok(videoGameResponse);
     }
+
 }
