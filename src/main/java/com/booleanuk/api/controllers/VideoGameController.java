@@ -73,7 +73,7 @@ public class VideoGameController {
         updateGame.setNumberOfPlayers(game.getNumberOfPlayers());
 
         Response<VideoGame> response = new Response<>();
-        response.set(this.videoGameRepository.save(game));
+        response.set(this.videoGameRepository.save(updateGame));
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }

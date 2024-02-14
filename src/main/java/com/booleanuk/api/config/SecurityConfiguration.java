@@ -18,7 +18,9 @@ public class SecurityConfiguration {
         http
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/video_games","/video_games/*")
+                        .requestMatchers("/video_games", "/video_games/*",
+                                "/users", "/users/*",
+                                "/loans", "/loans/*")
                         .authenticated()
                 )
                 .formLogin((form) -> form

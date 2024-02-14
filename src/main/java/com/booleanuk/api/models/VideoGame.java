@@ -10,7 +10,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "videoGames")
+@Table(name = "video_games")
 public class VideoGame {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,7 @@ public class VideoGame {
     private int numberOfPlayers;
     @Column
     private String genre;
+
 
     public VideoGame(String title, String game_studio, String age_rating, int numberOfPlayers, String genre) {
         this.title = title;
