@@ -115,6 +115,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error404'
+        '400':
+          description: The game cannot be deleted bacause it has loans attatched to it.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
 
   /users:
     post:
@@ -218,7 +224,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error404'
-
+        '400':
+          description: The user cannot be deleted bacause it has loans attatched to it.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
   /users/{userId}/games/{gameId}:
     post:
       tags:
@@ -260,7 +271,7 @@ paths:
     get:
       tags:
         - loans
-      summary: Get all loans
+      summary: Get loans for a particular user and game
       description: Get loans for a particular user and game.
       operationId: getLoans
       parameters:
@@ -325,7 +336,7 @@ paths:
     get:
       tags:
         - loans
-      summary: Get all loans
+      summary: Get all loans of a user
       description: Get a list of every loan for a user.
       operationId: getUserLoans
       parameters:
@@ -352,7 +363,7 @@ paths:
     get:
       tags:
         - loans
-      summary: Get all loans
+      summary: Get all loans of a game
       description: Get a list of every loan for a game.
       operationId: getGameLoans
       parameters:

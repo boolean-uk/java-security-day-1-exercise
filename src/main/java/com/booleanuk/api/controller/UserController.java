@@ -33,12 +33,14 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    //TODO: ensure user can't be deleted if loans exists
     @DeleteMapping("/{id}")
     public ResponseEntity<Response<?>> deleteUser(@PathVariable int id) {
         User userToDelete = findUser(id);
         if(userToDelete == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("not found"));
+        }
+        if(!userToDelete.getLoans().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("bad request"));
         }
 
         userRepository.delete(userToDelete);

@@ -33,12 +33,15 @@ public class GameController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    //TODO: ensure game can't be deleted if loans exists
     @DeleteMapping("/{id}")
     public ResponseEntity<Response<?>> deleteGame(@PathVariable int id) {
         Game gameToDelete = findGame(id);
         if(gameToDelete == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("not found"));
+        }
+
+        if(!gameToDelete.getLoans().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("bad request"));
         }
 
         gameRepository.delete(gameToDelete);
