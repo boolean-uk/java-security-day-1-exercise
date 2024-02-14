@@ -14,10 +14,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("libraries")
@@ -57,8 +54,11 @@ public class LibraryController {
         Library library1 = getALibrary(id);
         library1.setUpdatedAt(DateCreater.getCurrentDate());
         library1.setName(library.getName());
-        library1.setCreatedAt(library.getCreatedAt());
-        library1.setGames(library.getGames());
+        if(library1.getGames() == null) {
+            library1.setGames(new ArrayList<>());
+        } else {
+            library1.setGames(library.getGames());
+        }
 
         this.checkValidInput(library1);
 
@@ -70,7 +70,7 @@ public class LibraryController {
     public ResponseEntity<Response<?>> deleteLibrary(@PathVariable (name = "id") int id) {
         Library library = this.getALibrary(id);
 
-        this.libraryRepository.delete(library);
+        this.libraryRepository.delete(this.getALibrary(id));
 
         return new ResponseEntity<>(new SuccessResponse(library), HttpStatus.OK);
 

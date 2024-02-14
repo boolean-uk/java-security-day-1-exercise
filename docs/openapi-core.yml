@@ -140,13 +140,20 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error404'
-  /libraries/{id}/games:
+  /libraries/{libraryId}/games:
     post:
       tags:
         - games
       summary: Create game
       description: Create a new game
       operationId: createGame
+      parameters:
+        - name: libraryId
+          in: path
+          description: The ID of the library to create the game for
+          required: true
+          schema:
+            type: integer
       requestBody:
         content:
           application/json:
@@ -171,6 +178,13 @@ paths:
       summary: Get a game
       description: Get a list of games
       operationId: getGame
+      parameters:
+        - name: libraryId
+          in: path
+          description: The ID of the library to create the game for
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: Successfully returned a list of all games
@@ -178,7 +192,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllGames'
-  /libraries/{id}/games/{id}:
+  /libraries/{libraryId}/games/{id}:
     put:
       tags:
         - games
@@ -189,6 +203,12 @@ paths:
         - name: id
           in: path
           description: The ID of the library to update
+          required: true
+          schema:
+            type: integer
+        - name: libraryId
+          in: path
+          description: The ID of the library to create the game for
           required: true
           schema:
             type: integer
@@ -229,6 +249,12 @@ paths:
           required: true
           schema:
             type: integer
+        - name: libraryId
+          in: path
+          description: The ID of the library to create the game for
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: Successfully deleted the specified game
@@ -252,6 +278,12 @@ paths:
         - name: id
           in: path
           description: The ID of the library to retrieve
+          required: true
+          schema:
+            type: integer
+        - name: libraryId
+          in: path
+          description: The ID of the library to create the game for
           required: true
           schema:
             type: integer
@@ -302,11 +334,20 @@ components:
         $ref: '#/components/schemas/Library'
     CreateGame:
       type: object
-      required: [ name ]
+      required: [ title, gameStudio, ageRating, genre ]
       properties:
-        name:
+        title:
           type: string
-          example: "Oslo Library"
+          example: "Doom 4"
+        gameStudio:
+          type: string
+          example: "Bethesda"
+        ageRating:
+          type: integer
+          example: 18
+        genre:
+          type: string
+          example: "Action"
     Game:
       type: object
       properties:

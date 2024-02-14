@@ -62,8 +62,9 @@ public class GameController {
 
         if(library.getGames() == null) {
             library.setGames(new ArrayList<>());
+            throw new CustomDataNotFoundException("Game not found");
         } else {
-            Game game1 = library.getGames().get(id);
+            Game game1 = library.getGames().get(id-1);
             if(game1 != null) {
                 return new ResponseEntity<>(new SuccessResponse(game1), HttpStatus.OK);
             }
