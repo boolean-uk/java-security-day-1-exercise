@@ -1,6 +1,7 @@
 package com.booleanuk.api.controller;
 
 import com.booleanuk.api.exception.ApiException;
+import com.booleanuk.api.model.Game;
 import com.booleanuk.api.model.User;
 import com.booleanuk.api.repository.UserRepository;
 import com.booleanuk.api.response.Response;
@@ -44,5 +45,19 @@ public class UserController {
         }
         user.setBorrowedGames(new ArrayList<>());
         return ResponseEntity.ok(new Response<>(user));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Response<User>> update(@PathVariable int id, @RequestBody User user) {
+        if (user.getUsername() == null || user.getEmail() == null || user.getDob() == null) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "bad request");
+        }
+        User updatedUser = this.repository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "not found"));
+        updatedUser.setUsername(user.getUsername());
+        updatedUser.setEmail(user.getEmail());
+        updatedUser.setDob(user.getDob());
+
+        return new ResponseEntity<>(new Response<>(updatedUser), HttpStatus.CREATED);
     }
 }

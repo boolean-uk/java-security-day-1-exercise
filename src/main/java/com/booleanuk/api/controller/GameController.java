@@ -46,4 +46,19 @@ public class GameController {
         game.setBorrowedGames(new ArrayList<>());
         return ResponseEntity.ok(new Response<>(game));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Response<Game>> update(@PathVariable int id, @RequestBody Game game) {
+        if (game.getGameStudio() == null || game.getTitle() == null || game.getGenre() == null || game.getAgeRating() <= 0) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "bad request");
+        }
+        Game updatedGame = this.repository.findById(id)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "not found"));
+        updatedGame.setTitle(game.getTitle());
+        updatedGame.setAgeRating(game.getAgeRating());
+        updatedGame.setGameStudio(game.getGameStudio());
+        updatedGame.setGenre(game.getGameStudio());
+
+        return new ResponseEntity<>(new Response<>(updatedGame), HttpStatus.CREATED);
+    }
 }
