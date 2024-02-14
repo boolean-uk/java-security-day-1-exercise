@@ -1,0 +1,479 @@
+openapi: 3.0.3
+info:
+  title: Video Game Library API
+  version: 1.0.0
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: games
+  - name: users
+  - name: borrow
+
+paths:
+  /games:
+    get:
+      tags:
+        - games
+      summary: Get all games
+      description: Get a list of all games.
+      operationId: getAllGames
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+          description: Successful response
+
+    post:
+      tags:
+        - games
+      summary: Create a new game
+      description: Add a new game to the database.
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+          description: Game created successfully
+        '400':
+          description: Game fields not correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+
+
+  /games/{gameId}:
+    delete:
+      tags:
+        - games
+      summary: Delete a game
+      description: Delete a specific video game from the library.
+      operationId: deleteGame
+      parameters:
+        - name: gameId
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+          description: Game deleted successfully
+        '404':
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+
+    put:
+      tags:
+        - games
+      summary: Update a game
+      description: Update information about a specific video game.
+      operationId: updateGame
+      parameters:
+        - name: gameId
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+          description: Game updated successfully
+        '404':
+          description: Game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '400':
+          description: Game fields not correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+
+  /users:
+    get:
+      tags:
+        - users
+      summary: Get all users
+      description: Get a list of all users.
+      operationId: getAllUsers
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+          description: Successful response
+
+    post:
+      tags:
+        - users
+      summary: Create a new user
+      description: Add a new user to the system.
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+
+  /users/{userId}:
+
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      description: Delete a specific user from the system.
+      operationId: deleteUser
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: Update information about a specific user.
+      operationId: updateUser
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+        '400':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadRequestError'
+
+  /borrow/users/{userId}/games/{gameId}:
+    post:
+      tags:
+        - borrow
+      summary: Borrow a game
+      description: Borrow a specific game for a specific user.
+      operationId: borrowGame
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user borrowing the game
+          required: true
+          schema:
+            type: integer
+        - name: gameId
+          in: path
+          description: The ID of the game to be borrowed
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Game borrowed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowedGame'
+        '404':
+          description: User or game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+
+    put:
+      tags:
+        - borrow
+      summary: Return a borrowed game
+      description: Return a specific game that was borrowed by a user.
+      operationId: returnBorrowedGame
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user returning the game
+          required: true
+          schema:
+            type: integer
+        - name: gameId
+          in: path
+          description: The ID of the game to be returned
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Game returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowedGameReturned'
+        '404':
+          description: User or game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+
+  /borrow/users/{userId}:
+    get:
+      tags:
+        - borrow
+      summary: Get all borrowed games for a user
+      description: Get a list of all games ever borrowed by a specific user.
+      operationId: getAllBorrowUser
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user borrowing the game
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Game returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowedGameList'
+        '404':
+          description: User or game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+
+  /borrow/games/{gameId}:
+    get:
+      tags:
+        - borrow
+      summary: Get all borrowings for a game
+      description: Get a list of all game borrowings happened.
+      operationId: getAllBorrowGame
+      parameters:
+        - name: gameId
+          in: path
+          description: The ID of the game to be borrowed
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Borrowed game returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowedGameList'
+        '404':
+          description: User or game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+
+components:
+  schemas:
+    CreateGame:
+      type: object
+      required: [title, ageRating, gameStudio, genre]
+      properties:
+        title:
+          type: string
+          example: "GTA"
+        ageRating:
+          type: integer
+          example: 18
+        gameStudio:
+          type: string
+          example: "Rockstar"
+        genre:
+          type: string
+          example: "Action"
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "GTA"
+        ageRating:
+          type: integer
+          example: 18
+        gameStudio:
+          type: string
+          example: "Rockstar"
+        genre:
+          type: string
+          example: Action
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
+    CreateUser:
+      type: object
+      required: [username, email, dob]
+      properties:
+        username:
+          type: string
+          example: 'Gamer'
+        email:
+          type: string
+          format: email
+          example: "gamer@home.com"
+        dob:
+          type: string
+          format: date
+          example: "2001-09-05"
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        username:
+          type: string
+          example: 'Gamer'
+        email:
+          type: string
+          format: email
+          example: "gamer@home.com"
+        dob:
+          type: string
+          format: date
+          example: "2001-09-05"
+    AllUsers:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+    BadRequestError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "bad request"
+    NotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "not found"
+    BorrowedGame:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        game:
+          type: string
+          example: "GTA"
+        user:
+          type: string
+          example: "Gamer"
+        borrowDate:
+          type: string
+          format: date
+          example: "2024-01-01"
+        returnDate:
+          example: null
+    BorrowedGameReturned:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        game:
+          type: string
+          example: "GTA"
+        user:
+          type: string
+          example: "Gamer"
+        borrowDate:
+          type: string
+          format: date
+          example: "2024-01-01"
+        returnDate:
+          type: string
+          format: date
+          example: "2024-02-14"
+    BorrowedGameList:
+      type: array
+      items:
+        $ref: '#/components/schemas/BorrowedGame'
