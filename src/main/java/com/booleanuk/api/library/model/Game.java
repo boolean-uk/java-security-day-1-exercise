@@ -20,10 +20,10 @@ public class Game {
     private String gameStudio;
 
     @Column(name = "age_rating")
-    private int ageRating;
+    private Integer ageRating;
 
     @Column(name = "number_of_player")
-    private int numberOfPlayer;
+    private Integer numberOfPlayer;
 
     @Column(name = "genre")
     private String genre;
