@@ -26,4 +26,15 @@ public class Videogame {
 
     @Column(name = "genre")
     private String genre;
+
+    public Videogame(String title, String studio, String ageRating, String genre) {
+        this.title = title;
+        this.studio = studio;
+        this.ageRating = ageRating;
+        this.genre = genre;
+    }
+
+    public Videogame(int id) {
+        this.id = id;
+    }
 }

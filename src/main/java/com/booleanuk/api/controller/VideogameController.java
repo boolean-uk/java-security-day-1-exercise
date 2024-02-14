@@ -39,7 +39,11 @@ public class VideogameController {
     @PostMapping
     public ResponseEntity<Response<?>> create(@RequestBody Videogame videogame) {
         VideogameResponse videogameResponse = new VideogameResponse();
-        Videogame createdVideogame = videogame;
+        Videogame createdVideogame = this.videogameRepository.save(videogame);;
+        Optional.ofNullable(videogame.getTitle()).ifPresent((title) -> createdVideogame.setTitle(title));
+        Optional.ofNullable(videogame.getStudio()).ifPresent((studio) -> createdVideogame.setStudio(studio));
+        Optional.ofNullable(videogame.getAgeRating()).ifPresent((agerating) -> createdVideogame.setAgeRating(agerating));
+        Optional.ofNullable(videogame.getGenre()).ifPresent((genre) -> createdVideogame.setGenre(genre));
         videogameResponse.set(createdVideogame);
         this.videogameRepository.save(createdVideogame);
         return new ResponseEntity<>(videogameResponse, HttpStatus.CREATED);
@@ -53,10 +57,6 @@ public class VideogameController {
             errorResponse.set("not found");
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
-        Optional.ofNullable(videogame.getTitle()).ifPresent((title) -> gameToUpdate.setTitle(title));
-        Optional.ofNullable(videogame.getStudio()).ifPresent((studio) -> gameToUpdate.setStudio(studio));
-        Optional.ofNullable(videogame.getAgeRating()).ifPresent((agerating) -> gameToUpdate.setAgeRating(agerating));
-        Optional.ofNullable(videogame.getGenre()).ifPresent((genre) -> gameToUpdate.setGenre(genre));
         VideogameResponse videogameResponse = new VideogameResponse();
         videogameResponse.set(gameToUpdate);
         return new ResponseEntity<>(videogameResponse, HttpStatus.CREATED);
