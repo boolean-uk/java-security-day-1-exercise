@@ -1,9 +1,11 @@
 package com.booleanuk.api.controller;
 
 import com.booleanuk.api.model.Game;
+import com.booleanuk.api.model.Loan;
 import com.booleanuk.api.model.User;
 
 import com.booleanuk.api.repository.GameRepository;
+import com.booleanuk.api.repository.LoanRepository;
 import com.booleanuk.api.repository.UserRepository;
 import com.booleanuk.api.response.ErrorResponse;
 import com.booleanuk.api.response.UserListResponse;
@@ -14,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @RestController
@@ -25,6 +28,10 @@ public class UserController {
 
     @Autowired
     private GameRepository gameRepository;
+
+    @Autowired
+    private LoanRepository loanRepository;
+
 
 
     @GetMapping
@@ -111,9 +118,13 @@ public class UserController {
 
 
         user.getCurrentlyBorrowedGames().add(game);
-        //game.getBorrowedByHistory().add(game.getTitle());
         game.setBorrowed(true);
         game.setBorrowedBy(user);
+
+
+        Loan loan = new Loan(user, game);
+        loan.setBorrowedAt(LocalDateTime.now());
+        this.loanRepository.save(loan);
 
         this.userRepository.save(user);
         this.gameRepository.save(game);
@@ -141,6 +152,12 @@ public class UserController {
         //user.getBorrowHistory().add(game.getTitle());
         game.setBorrowed(false);
         game.setBorrowedBy(null);
+
+        for(Loan loan : this.loanRepository.findAll()){
+            if(loan.getUser() == user && loan.getGame() == game && loan.getReturnedAt() == null){
+                loan.setReturnedAt(LocalDateTime.now());
+            }
+        }
 
         this.userRepository.save(user);
         this.gameRepository.save(game);
