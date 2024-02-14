@@ -23,4 +23,26 @@ public class GameController {
     public Game getById(@PathVariable("id") Integer id) {
         return this.gameRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
     }
+
+
+    @PostMapping
+    public ResponseEntity<Game> addOne(@RequestBody Game game){
+
+        return new ResponseEntity<>(this.gameRepository.save(game), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Game> deleteOne(@PathVariable int id){
+        Game gameToDelete = this.gameRepository
+                .findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+
+        try{
+            this.gameRepository.delete(gameToDelete);
+            return new ResponseEntity<>(gameToDelete, HttpStatus.OK);
+        }
+        catch (Exception e){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+    }
 }
