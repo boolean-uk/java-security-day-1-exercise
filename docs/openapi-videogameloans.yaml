@@ -36,7 +36,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VideoGames'
+                $ref: '#/components/schemas/VideoGame'
 
   /video-games/{id}:
     get:
@@ -307,14 +307,3 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/User'
-    Loan:
-      type: object
-      properties:
-        user:
-          type: object
-          example:
-            $ref: '#/components/schemas/User'
-        videoGame:
-          type: object
-          example:
-            $ref: '#/components/schemas/VideoGame'
