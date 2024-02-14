@@ -29,11 +29,11 @@ public class User {
     private String email;
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties(value = {"id", "user"})
+    @JsonIgnoreProperties(value = {"id", "user", "userGameBorrowers"})
     public List<VideoGame> videoGames;
 
     @ManyToMany(mappedBy = "userGameBorrowers")
-    @JsonIgnoreProperties(value = {"id", "user"})
+    @JsonIgnoreProperties(value = {"id", "userGameBorrowers", "user"})
     private List<VideoGame> borrowedGames;
 
     public User(String name, String phone, String email) {

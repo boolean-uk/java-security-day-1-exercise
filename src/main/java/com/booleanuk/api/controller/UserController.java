@@ -4,18 +4,17 @@ import com.booleanuk.api.model.User;
 import com.booleanuk.api.model.VideoGame;
 import com.booleanuk.api.repository.UserRepository;
 import com.booleanuk.api.repository.VideoGameRepository;
-import com.booleanuk.response.*;
+import com.booleanuk.api.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
 public class UserController {
 
     @Autowired
@@ -200,6 +199,4 @@ public class UserController {
         videoGameListResponse.set(videoGamesBorrowed);
         return new ResponseEntity<>(videoGameListResponse, HttpStatus.CREATED);
     }
-
-
 }

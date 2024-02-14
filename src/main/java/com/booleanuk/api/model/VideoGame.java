@@ -1,6 +1,7 @@
 package com.booleanuk.api.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -47,8 +48,9 @@ public class VideoGame {
     private boolean borrowed;
 
     @ManyToOne
-    @JoinColumn(name = "current_borrower_id")
+    @JoinColumn(name = "current_borrower_id", nullable = false)
     @JsonIncludeProperties(value = {"id", "name", "phone", "email"})
+    @JsonIgnoreProperties(value = "current_borrower_id")
     private User currentBorrower;
 
     @ManyToMany

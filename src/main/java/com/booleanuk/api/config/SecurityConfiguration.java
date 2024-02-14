@@ -21,7 +21,7 @@ public class SecurityConfiguration {
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/videogames", "/videogames/*",
-                                         "/users", "/users/*")
+                                         "/users", "/users/**")
                         .authenticated()
                 )
                 .formLogin((form) -> form
@@ -34,9 +34,9 @@ public class SecurityConfiguration {
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
-                .username("admin")
-                .password("admin")
-                .roles("ADMIN")
+                .username("user")
+                .password("password")
+                .roles("USER")
                 .build();
 
         return new InMemoryUserDetailsManager(user);
