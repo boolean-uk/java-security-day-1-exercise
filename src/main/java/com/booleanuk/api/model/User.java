@@ -28,7 +28,7 @@ public class User {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dob;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     private List<BorrowedGame> borrowedGames;
 
 

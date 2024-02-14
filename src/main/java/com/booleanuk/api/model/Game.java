@@ -29,7 +29,7 @@ public class Game {
     @Column
     private String genre;
 
-    @OneToMany
+    @OneToMany(mappedBy = "game")
     private List<BorrowedGame> borrowedGames;
 
     public Game(String title, int ageRating, String gameStudio, String genre) {
