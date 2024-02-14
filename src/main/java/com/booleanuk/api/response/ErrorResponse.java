@@ -1,14 +1,20 @@
 package com.booleanuk.api.response;
 
-public class ErrorResponse extends Response<String>{
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-    public ErrorResponse() {
-        this.setStatus("Error");
-        this.setData("Could not create/update videogame, please check all required fields.");
-    }
+import java.util.HashMap;
+import java.util.Map;
 
-    public ErrorResponse(int id) {
-        this.setStatus("Error");
-        this.setData(("Videogame with id " + id + " not found"));
+@Getter
+@NoArgsConstructor
+public class ErrorResponse extends Response<Map<String, String>>{
+
+    public void set(String message) {
+        this.status = "error";
+
+        Map<String, String> reply = new HashMap<>();
+        reply.put("message", message);
+        this.data = reply;
     }
 }

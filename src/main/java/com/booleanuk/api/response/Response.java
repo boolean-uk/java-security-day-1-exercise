@@ -1,9 +1,14 @@
 package com.booleanuk.api.response;
 
-import lombok.Setter;
+import lombok.Getter;
 
-@Setter
+@Getter
 public class Response<T> {
-    private String status = "Success";
-    private T data;
+    protected String status;
+    protected T data;
+
+    public void set(T data) {
+        this.status = "success";
+        this.data = data;
+    }
 }

@@ -21,7 +21,7 @@ public class VideogameController {
     public ResponseEntity<VideogameListResponse> getAllVideogames() {
         VideogameListResponse videogameListResponse = new VideogameListResponse();
 
-        videogameListResponse.setData(this.videogameRespository.findAll());
+        videogameListResponse.set(this.videogameRespository.findAll());
 
         return ResponseEntity.ok(videogameListResponse);
     }
@@ -31,13 +31,15 @@ public class VideogameController {
         Videogame videogame = this.videogameRespository.findById(id).orElse(null);
 
         if (videogame == null) {
-            ErrorResponse errorResponse = new ErrorResponse(id);
+            ErrorResponse error = new ErrorResponse();
 
-            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            error.set("not found");
+
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
 
         VideogameResponse videogameResponse = new VideogameResponse();
-        videogameResponse.setData(videogame);
+        videogameResponse.set(videogame);
 
         return ResponseEntity.ok(videogameResponse);
     }
@@ -56,7 +58,7 @@ public class VideogameController {
         Videogame newVideogame = this.videogameRespository.save(videogame);
 
         VideogameResponse videogameResponse = new VideogameResponse();
-        videogameResponse.setData(newVideogame);
+        videogameResponse.set(newVideogame);
 
         return new ResponseEntity<>(videogameResponse, HttpStatus.CREATED);
     }
@@ -75,8 +77,11 @@ public class VideogameController {
         Videogame videogameToBeUpdated = this.videogameRespository.findById(id).orElse(null);
 
         if (videogameToBeUpdated == null) {
-            ErrorResponse errorResponse = new ErrorResponse(id);
-            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            ErrorResponse error = new ErrorResponse();
+
+            error.set("not found");
+
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
 
         videogameToBeUpdated.setTitle(videogame.getTitle());
@@ -88,7 +93,7 @@ public class VideogameController {
         Videogame updatedVideogame = this.videogameRespository.save(videogameToBeUpdated);
 
         VideogameResponse videogameResponse = new VideogameResponse();
-        videogameResponse.setData(updatedVideogame);
+        videogameResponse.set(updatedVideogame);
 
         return new ResponseEntity<>(videogameResponse, HttpStatus.CREATED);
     }
@@ -98,14 +103,17 @@ public class VideogameController {
         Videogame videogameToBeDeleted = this.videogameRespository.findById(id).orElse(null);
 
         if (videogameToBeDeleted == null) {
-            ErrorResponse errorResponse = new ErrorResponse(id);
-            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+            ErrorResponse error = new ErrorResponse();
+
+            error.set("not found");
+
+            return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
 
         this.videogameRespository.deleteById(id);
 
         VideogameResponse videogameResponse = new VideogameResponse();
-        videogameResponse.setData(videogameToBeDeleted);
+        videogameResponse.set(videogameToBeDeleted);
 
         return ResponseEntity.ok(videogameResponse);
     }
