@@ -19,7 +19,7 @@ public class SecurityConfiguration {
         http
                 .csrf((csrf)->csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/users", "/users/**", "/games", "/games/**", "/borrow", "/borrow/**").permitAll()//.authenticated()
+                        .requestMatchers("/users", "/users/**", "/games", "/games/**", "/borrow", "/borrow/**").authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login").permitAll()
