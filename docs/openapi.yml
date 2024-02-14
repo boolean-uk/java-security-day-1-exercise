@@ -10,6 +10,8 @@ servers:
 paths:
   /games:
     get:
+      tags:
+        - games
       summary: Retrieve all video games
       responses:
         '200':
@@ -18,8 +20,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllGames'
+        '401':
+          description: Unauthorized
 
     post:
+      tags:
+        - games
       summary: Add a new video game
       requestBody:
         required: true
@@ -41,6 +47,8 @@ paths:
 
   /games/{id}:
     get:
+      tags:
+        - games
       summary: Retrieve information about a specific video game
       parameters:
         - name: id
@@ -56,10 +64,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GameResponse'
+        '401':
+          description: Unauthorized
         '404':
           description: Game was not found
 
     put:
+      tags:
+        - games
       summary: Update information about a specific video game
       parameters:
         - name: id
@@ -87,6 +99,8 @@ paths:
           description: Game was not found
 
     delete:
+      tags:
+        - games
       summary: Delete a specific video game
       parameters:
         - name: id
@@ -106,6 +120,205 @@ paths:
           description: Unauthorized
         '404':
           description: Game was not found
+
+  /customers:
+    get:
+      tags:
+        - customers
+      summary: Retrieve all customers
+      responses:
+        '200':
+          description: A list of customers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllCustomers'
+        '401':
+          description: Unauthorized
+
+    post:
+      tags:
+        - customers
+      summary: Add a new customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerInput'
+      responses:
+        '201':
+          description: Successfully added the new customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '400':
+          description: Could not create customer
+        '401':
+          description: Unauthorized
+
+  /customers/{id}:
+    get:
+      tags:
+        - customers
+      summary: Retrieve information about a specific customer
+      parameters:
+        - name: id
+          in: path
+          description: ID of the customer
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Information about the requested customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Customer was not found
+
+    put:
+      tags:
+        - customers
+      summary: Update information about a specific customer
+      parameters:
+        - name: id
+          in: path
+          description: ID of the customer
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerUpdate'
+      responses:
+        '200':
+          description: Successfully updated the customer information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Customer was not found
+
+    delete:
+      tags:
+        - customers
+      summary: Delete a specific customer
+      parameters:
+        - name: id
+          in: path
+          description: ID of the customer
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Customer was not found
+
+  /customers/{id}/games:
+    get:
+      tags:
+        - customers
+      parameters:
+        - name: id
+          in: path
+          description: ID of the customer
+          required: true
+          schema:
+            type: integer
+      summary: Get a history of borrowed games for a customer
+      responses:
+        '200':
+          description: Successfully returned a list of borrowed games for the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllReturnResponses'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Customer or game does not exist
+
+  /borrow/{customerId}/{gameId}:
+    post:
+      tags:
+        - borrow
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of the customer
+          required: true
+          schema:
+            type: integer
+        - name: gameId
+          in: path
+          description: ID of the game
+          required: true
+          schema:
+            type: integer
+      summary: Borrow a game
+      responses:
+        '201':
+          description: Successfully borrowed the game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BorrowResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Customer or game does not exist
+        '409':
+          description: Game is already borrowed
+
+  /return/{customerId}/{gameId}:
+    post:
+      tags:
+        - borrow
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of the customer
+          required: true
+          schema:
+            type: integer
+        - name: gameId
+          in: path
+          description: ID of the game
+          required: true
+          schema:
+            type: integer
+      summary: Return a game
+      responses:
+        '200':
+          description: Successfully returned the game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Customer or game does not exist
 
 components:
   schemas:
@@ -174,3 +387,102 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/GameResponse'
+
+    CustomerInput:
+      type: object
+      required: [ name, email, phone ]
+      properties:
+        name:
+          type: string
+          example: "Santiago Delgado"
+        email:
+          type: string
+          example: "santiago.delgado@protonmail.com"
+        phone:
+          type: string
+          example: "+4755443322"
+
+    CustomerUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Santiago Delgado"
+        email:
+          type: string
+          example: "santiago.delgado@protonmail.com"
+        phone:
+          type: string
+          example: "+4755443322"
+
+    CustomerResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 35
+        name:
+          type: string
+          example: "Santiago Delgado"
+        email:
+          type: string
+          example: "santiago.delgado@protonmail.com"
+        phone:
+          type: string
+          example: "+4755443322"
+
+    AllCustomers:
+      type: array
+      items:
+        $ref: '#/components/schemas/CustomerResponse'
+
+    BorrowResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 35
+        game:
+          type: object
+          example:
+            $ref: '#/components/schemas/GameResponse'
+        customer:
+          type: object
+          example:
+            $ref: '#/components/schemas/CustomerResponse'
+        startDate:
+          type: string
+          format: date
+          example: "2024-02-14T15:10:19.166115"
+        endDate:
+          type: string
+          format: date
+          example: null
+
+    ReturnResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 35
+        game:
+          type: object
+          example:
+            $ref: '#/components/schemas/GameResponse'
+        customer:
+          type: object
+          example:
+            $ref: '#/components/schemas/CustomerResponse'
+        startDate:
+          type: string
+          format: date
+          example: "2024-02-14T15:10:19.166115"
+        endDate:
+          type: string
+          format: date
+          example: "2024-02-16T18:11:39.118"
+
+    AllReturnResponses:
+      type: array
+      items:
+        $ref: '#/components/schemas/ReturnResponse'
