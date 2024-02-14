@@ -1,0 +1,156 @@
+openapi: 3.1.0
+info:
+  title: Security Assigntment Day 1 Exercise
+  description: Java Security with Sing assignment
+  version: 0.2.3
+  contact:
+    name: Security
+
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: video_games
+paths:
+  /video_games:
+    post:
+      tags:
+        - video_games
+      operationId: createVideoGame
+      summary: Create a VideoGame
+      description: Add a new VideoGame to our list of available Video Games
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        '201':
+          description: VideoGame created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+    get:
+      tags:
+        - video_games
+      summary: Get all Video Games
+      description: Get all of the video games from our list
+      operationId: getVideoGames
+      responses:
+        '200':
+          description: Get all video games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllVideoGames'
+  /video_games/{id}:
+    get:
+      tags:
+        - video_games
+      summary: Get a video game
+      description: Get a video game by ID
+      operationId: getSpecificVideoGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to get
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get a specific video game from the list given its ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+    put:
+      tags:
+        - video_games
+      summary: Update a video game
+      description: Update an existing video game by ID
+      operationId: updateVideoGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        '201':
+          description: Update the given video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+    delete:
+      tags:
+        - video_games
+      summary: Delete a video game
+      description: Remove a video game from our list of products
+      operationId: deleteVideoGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Delete the given video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+
+components:
+  schemas:
+    CreateVideoGame:
+      type: object
+      required: [title, game_studio, age_rating, numberOfPlayers, genre]
+      properties:
+        title:
+          type: string
+          example: "The Legend of Zelda: Tears Of the Kingdom"
+        game_studio:
+          type: string
+          example: "Nintendo"
+        age_rating:
+          type: string
+          example: "T"
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Action-adventure"
+    VideoGame:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "The Legend of Zelda: Tears Of the Kingdom"
+        game_studio:
+          type: string
+          example: "Nintendo"
+        age_rating:
+          type: string
+          example: "T"
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Action-adventure"
+    AllVideoGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/VideoGame'
