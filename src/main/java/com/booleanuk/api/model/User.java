@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -26,13 +26,13 @@ public class User {
 
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private OffsetDateTime dob;
+    private LocalDate dob;
 
     @OneToMany
     private List<BorrowedGame> borrowedGames;
 
 
-    public User(String username, String email, OffsetDateTime dob) {
+    public User(String username, String email, LocalDate dob) {
         this.username = username;
         this.email = email;
         this.dob = dob;

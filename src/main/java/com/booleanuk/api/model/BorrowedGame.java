@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 
 @Data
 @NoArgsConstructor
@@ -28,10 +28,10 @@ public class BorrowedGame {
 
     @CreationTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private OffsetDateTime borrowDate;
+    private LocalDate borrowDate;
 
     @Column
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private OffsetDateTime returnDate;
+    private LocalDate returnDate;
 
 }
