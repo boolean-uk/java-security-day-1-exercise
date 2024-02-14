@@ -33,10 +33,11 @@ public class Game {
     @JsonIncludeProperties({"id", "name", "createdAt", "updatedAt"})
     private Library library;
 
-    public Game(String title, String gameStudio, int ageRating, String genre) {
+    public Game(String title, String gameStudio, int ageRating, String genre, Library library) {
         this.title = title;
         this.gameStudio = gameStudio;
         this.ageRating = ageRating;
         this.genre = genre;
+        this.library = library;
     }
 }

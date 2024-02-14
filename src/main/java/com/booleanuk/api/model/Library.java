@@ -26,8 +26,8 @@ public class Library {
     @Column
     private String updatedAt;
 
-    @OneToMany(mappedBy = "game")
-    @JsonIgnoreProperties(value = "game", allowSetters = true)
+    @OneToMany(mappedBy = "library")
+    @JsonIgnoreProperties(value = "library", allowSetters = true)
     private List<Game> games;
 
 
