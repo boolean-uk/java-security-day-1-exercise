@@ -32,6 +32,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Game'
+        '400':
+          description: Could not create a new game, please check all fields are correct.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
     get:
       tags:
         - games
@@ -63,7 +69,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateGame'
+              $ref: '#/components/schemas/UpdateGame'
       responses:
         '201':
           description: Successfully updated the specified game
@@ -71,6 +77,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Game'
+        '400':
+          description: Could not update the game, please check all fields are correct.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: No game with that ID found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
     delete:
       tags:
         - games
@@ -91,6 +109,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Game'
+        '404':
+          description: No game with that ID found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
 
   /users:
     post:
@@ -111,6 +135,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '400':
+          description: Could not create a new user, please check all fields are correct.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
     get:
       tags:
         - users
@@ -142,7 +172,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateUser'
+              $ref: '#/components/schemas/UpdateUser'
       responses:
         '201':
           description: Successfully updated the specified user
@@ -150,6 +180,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '400':
+          description: Could not update the user, please check all fields are correct.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: No user with that ID found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
     delete:
       tags:
         - users
@@ -170,6 +212,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/User'
+        '404':
+          description: No user with that ID found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
 
   /users/{userId}/games/{gameId}:
     post:
@@ -203,6 +251,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Loan'
+        '400':
+          description: Could not create a new loan, please check all fields are correct.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
     get:
       tags:
         - loans
@@ -229,6 +283,44 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllLoans'
+  /loans/{id}:
+    put:
+      tags:
+        - loans
+      summary: Update a loan
+      description: Update an existing loan.
+      operationId: updateLoan
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the loan
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLoan'
+      responses:
+        '201':
+          description: Successfully updated the specified loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '400':
+          description: Could not update the loan, please check all fields are correct.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: No loan with that ID found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
   /users/{id}/loans:
     get:
       tags:
@@ -250,6 +342,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllUserLoans'
+        '404':
+          description: No user with that ID found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
   /games/{id}/loans:
     get:
       tags:
@@ -271,11 +369,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllGameLoans'
+        '404':
+          description: No game with that ID found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
 components:
   schemas:
     CreateGame:
       type: object
       required: [title, gameStudio, ageRating, numberOfPlayers, genre]
+      properties:
+        title:
+          type: string
+          example: "The Last of Us"
+        gameStudio:
+          type: string
+          example: "Naughty Dog"
+        ageRating:
+          type: string
+          example: "18"
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Survival horror"
+    UpdateGame:
+      type: object
       properties:
         title:
           type: string
@@ -339,6 +461,18 @@ components:
         email:
           type: string
           example: "jane@doe.com"
+    UpdateUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Jane Doe"
+        phone:
+          type: string
+          example: "+123456789"
+        email:
+          type: string
+          example: "jane@doe.com"
     User:
       type: object
       properties:
@@ -366,8 +500,14 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/User'
-
     CreateLoan:
+      type: object
+      required: [ active ]
+      properties:
+        active:
+          type: boolean
+          example: true
+    UpdateLoan:
       type: object
       required: [ active ]
       properties:
@@ -441,3 +581,27 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Loan'
+    Error400:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "bad request"
+    Error404:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "not found"
