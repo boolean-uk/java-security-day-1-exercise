@@ -1,4 +1,4 @@
-package com.booleanuk.api;
+package com.booleanuk.api.Models;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -19,7 +19,7 @@ public class VideoGame {
     private String title;
 
     @Column
-    private String GameStudio;
+    private String gameStudio;
 
     @Column
     private String ageRating;
@@ -32,4 +32,17 @@ public class VideoGame {
 
     @Column
     private boolean available;
+
+    public VideoGame(String title, String gameStudio, String ageRating, int numPlayers, String genre) {
+        this.title = title;
+        this.gameStudio = gameStudio;
+        this.ageRating = ageRating;
+        this.numPlayers = numPlayers;
+        this.genre = genre;
+        this.available = true;
+    }
+
+    public VideoGame(int id){
+        this.id = id;
+    }
 }

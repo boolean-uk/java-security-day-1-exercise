@@ -1,4 +1,4 @@
-package com.booleanuk.api;
+package com.booleanuk.api.Controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
