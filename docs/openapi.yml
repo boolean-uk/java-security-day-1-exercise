@@ -1,0 +1,264 @@
+openapi: 3.1.0
+info:
+  title: Java API Security Day 1 - Core Criteria
+  description: Core Criteria for the Java Security Lessons
+  version: 0.2.3
+  contact:
+    name: Video Game
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: games
+  - name: users
+paths:
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create a game
+      description: Create a new game account.
+      operationId: creategame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Creategame'
+      responses:
+        '201':
+          description: Successfully created a new game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/game'
+    get:
+      tags:
+        - games
+      summary: Get all games
+      description: Get a list of every game.
+      operationId: getgames
+      responses:
+        '200':
+          description: Get a list of all games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Allgames'
+  /games/{id}:
+    put:
+      tags:
+        - games
+      summary: Update a game
+      description: Update an existing game. For ease of implementation, all fields are required from the client.
+      operationId: updategame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Creategame'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/game'
+    delete:
+      tags:
+        - games
+      summary: Delete a game
+      description: Delete an existing game. When deleting data, it's useful to send the deleted record back to the client so they can re-create it if deletion was a mistake.
+      operationId: deletegame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/game'
+
+  /users:
+    post:
+      tags:
+        - users
+      summary: Create a user
+      description: Create a new user.
+      operationId: createuser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Createuser'
+      responses:
+        '201':
+          description: Successfully created a new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+    get:
+      tags:
+        - users
+      summary: Get all users
+      description: Get a list of every user.
+      operationId: getusers
+      responses:
+        '200':
+          description: Successfully returned a list of all users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Allusers'
+  /users/{id}:
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: Update an existing user. For ease of implementation, all fields are required from the client.
+      operationId: updateuser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Createuser'
+      responses:
+        '201':
+          description: Successfully updated the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      description: Delete an existing user. When deleting data, it's useful to send the deleted record back to the client so they can re-create it if deletion was a mistake.
+      operationId: deleteuser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+
+
+components:
+  schemas:
+    Creategame:
+      type: object
+      required: [name, email, phone]
+      properties:
+        name:
+          type: string
+          example: "Chris Wolstenholme"
+        email:
+          type: string
+          example: "chris@muse.mu"
+        phone:
+          type: string
+          example: "+44729388192"
+    game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Chris Wolstenholme"
+        email:
+          type: string
+          example: "chris@muse.mu"
+        phone:
+          type: string
+          example: "+44729388192"
+        createdAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        updatedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+    Allgames:
+      type: array
+      items:
+        $ref: '#/components/schemas/game'
+
+    Createuser:
+      type: object
+      required: [ title, rating, description, runtimeMins ]
+      properties:
+        title:
+          type: string
+          example: "Dodgeball"
+        rating:
+          type: string
+          example: "PG-13"
+        description:
+          type: string
+          example: "The greatest user ever made."
+        runtimeMins:
+          type: integer
+          example: 126
+    user:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Dodgeball"
+        rating:
+          type: string
+          example: "PG-13"
+        description:
+          type: string
+          example: "The greatest user ever made."
+        runtimeMins:
+          type: integer
+          example: 126
+        createdAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        updatedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+    Allusers:
+      type: array
+      items:
+        $ref: '#/components/schemas/user'
+
