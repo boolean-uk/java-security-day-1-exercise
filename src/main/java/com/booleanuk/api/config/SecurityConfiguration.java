@@ -20,7 +20,8 @@ public class SecurityConfiguration {
         http
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/books", "/books/*").authenticated()
+                        .requestMatchers("/libraries", "/libraries/*").authenticated()
+                        .requestMatchers("/games", "/games/*").authenticated()
                 )
                 .formLogin((form) -> form
                         .loginPage("/login").permitAll()
@@ -32,9 +33,9 @@ public class SecurityConfiguration {
     @Bean
     public UserDetailsService userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
-                .username("user")
-                .password("password")
-                .roles("USER")
+                .username("admin")
+                .password("admin")
+                .roles("ADMIN")
                 .build();
 
         return new InMemoryUserDetailsManager(user);

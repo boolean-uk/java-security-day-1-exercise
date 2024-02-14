@@ -140,7 +140,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error404'
-  /games:
+  /libraries/{id}/games:
     post:
       tags:
         - games
@@ -178,7 +178,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AllGames'
-  /games/{id}:
+  /libraries/{id}/games/{id}:
     put:
       tags:
         - games
