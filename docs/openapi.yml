@@ -1,0 +1,176 @@
+openapi: 3.1.0
+info:
+  title: Video Game Library API
+  version: 1.0.0
+  description: API for managing information about video games
+
+servers:
+  - url: http://localhost:4000
+
+paths:
+  /games:
+    get:
+      summary: Retrieve all video games
+      responses:
+        '200':
+          description: A list of video games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+
+    post:
+      summary: Add a new video game
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameInput'
+      responses:
+        '201':
+          description: Successfully added the new video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameResponse'
+        '400':
+          description: Could not create game
+        '401':
+          description: Unauthorized
+
+  /games/{id}:
+    get:
+      summary: Retrieve information about a specific video game
+      parameters:
+        - name: id
+          in: path
+          description: ID of the video game
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Information about the requested video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameResponse'
+        '404':
+          description: Game was not found
+
+    put:
+      summary: Update information about a specific video game
+      parameters:
+        - name: id
+          in: path
+          description: ID of the video game
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GameUpdate'
+      responses:
+        '200':
+          description: Successfully updated the video game information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Game was not found
+
+    delete:
+      summary: Delete a specific video game
+      parameters:
+        - name: id
+          in: path
+          description: ID of the video game
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Game was not found
+
+components:
+  schemas:
+    GameInput:
+      type: object
+      required: [title, developer, publisher, rating, genre]
+      properties:
+        title:
+          type: string
+          example: "Morrowind"
+        developer:
+          type: string
+          example: "Bethesda Game Studios"
+        publisher:
+          type: string
+          example: "Bethesda Softworks"
+        rating:
+          type: number
+          example: 12
+        genre:
+          type: string
+          example: "RPG"
+
+    GameUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Morrowind"
+        developer:
+          type: string
+          example: "Bethesda Game Studios"
+        publisher:
+          type: string
+          example: "Bethesda Softworks"
+        rating:
+          type: number
+          example: 12
+        genre:
+          type: string
+          example: "RPG"
+
+    GameResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 35
+        title:
+          type: string
+          example: "Morrowind"
+        developer:
+          type: string
+          example: "Bethesda Game Studios"
+        publisher:
+          type: string
+          example: "Bethesda Softworks"
+        rating:
+          type: number
+          example: 12
+        genre:
+          type: string
+          example: "RPG"
+
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/GameResponse'
