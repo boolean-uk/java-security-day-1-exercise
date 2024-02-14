@@ -1,0 +1,161 @@
+openapi: 3.1.0
+info:
+  title: Security day 1 Core Criteria
+  description: Core Criteria security day 1
+  version: 0.2.3
+  contact:
+    name: Security day 1
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: games
+paths:
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create game
+      description: Create a new game
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully created a new game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+    get:
+      tags:
+        - games
+      summary: Get games
+      description: Get all of the games in the list
+      operationId: getGames
+      responses:
+        '200':
+          description: Successfully get a list of all of the games in the list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+  /games/{id}:
+    get:
+      tags:
+        - games
+      summary: Get a game
+      description: Get a specific game by their id
+      operationId: getSpecificGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get the specified author from the list given their ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+    put:
+      tags:
+        - games
+      summary: Update a game
+      description: Update the specified game
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+    delete:
+      tags:
+        - games
+      summary: Delete an game
+      description: Delete the specified game
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+
+components:
+  schemas:
+    CreateGame:
+      type: object
+      required: [title, game_studio, age_rating, number_of_players, genre]
+      properties:
+        title:
+          type: string
+          example: "Fifa 24"
+        game_studio:
+          type: string
+          example: "EA"
+        age_rating:
+          type: integer
+          example: 18
+        number_of_players:
+          type: integer
+          example: 2
+        genre:
+          type: string
+          example: "Sports"
+    Game:
+      type: object
+      required: [title, game_studio, age_rating, number_of_players, genre]
+      properties:
+        title:
+          type: string
+          example: "Fifa 24"
+        game_studio:
+          type: string
+          example: "EA"
+        age_rating:
+          type: integer
+          example: 18
+        number_of_players:
+          type: integer
+          example: 2
+        genre:
+          type: string
+          example: "Sports"
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
+
