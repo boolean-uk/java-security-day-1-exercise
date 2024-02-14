@@ -1,0 +1,138 @@
+openapi: 3.0.3
+info:
+  title: Java API Exercise - Core Criteria
+  description: Core Criteria for the Java Authentication Day 1
+  version: 0.2.2
+  contact:
+    name: Authentication Day 1
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: games
+paths:
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create a Game
+      description: Description of an games POST route
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully created the a game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    get:
+      tags:
+        - games
+      summary: Games GET route
+      description: Description of an games GET route
+      operationId: getGames
+      responses:
+        '200':
+          description: Successfully gotten all games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+  /games/{id}:
+    put:
+      tags:
+        - games
+      summary: Games PUT route
+      description: Description of an games PUT route
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    delete:
+      tags:
+        - games
+      summary: Delete a game
+      description: Description of an games DELETE route
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+components:
+  schemas:
+    CreateGame:
+      type: object
+      required: [title, gamestudio, agerating, numberOfPlayers, genre]
+      properties:
+        title:
+          type: string
+          example: "Call of Duty"
+        gamestudio:
+          type: string
+          example: "ubisoft"
+        agerating:
+          type: string
+          example: "PG-13"
+        numberOfPlayers:
+          type: integer
+          example: 2
+        genre:
+          type: string
+          example: "FPS"
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Call of Duty"
+        gamestudio:
+          type: string
+          example: "ubisoft"
+        agerating:
+          type: string
+          example: "PG-13"
+        numberOfPlayers:
+          type: integer
+          example: 2
+        genre:
+          type: string
+          example: "FPS"
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
