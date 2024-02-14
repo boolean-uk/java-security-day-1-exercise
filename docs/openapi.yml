@@ -1,0 +1,301 @@
+openapi: 3.1.0
+info:
+  title: Java API Game Challenge - Core Criteria
+  description: Core Criteria for the Java Game Booking Challenge
+  version: 0.2.3
+  contact:
+    name: Game Book Challenge
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: users
+  - name: games
+paths:
+  /users:
+    post:
+      tags:
+        - users
+      summary: Create a user
+      description: Create a new user account.
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Successfully created a new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    get:
+      tags:
+        - users
+      summary: Get all users
+      description: Get a list of every user.
+      operationId: getUsers
+      responses:
+        '200':
+          description: Get a list of all users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Get a user
+      description: Get a specific user.
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to get
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Successfully updated the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: Update an existing user. For ease of implementation, all fields are required from the client.
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Successfully updated the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      description: Delete an existing user. When deleting data, it's useful to send the deleted record back to the client so they can re-create it if deletion was a mistake.
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create a game
+      description: Create a new game.
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully created a new Game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    get:
+      tags:
+        - games
+      summary: Get all games
+      description: Get a list of every game.
+      operationId: getGames
+      responses:
+        '200':
+          description: Successfully returned a list of all games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+  /games/{id}:
+    get:
+      tags:
+        - games
+      summary: Get a game
+      description: Get a specific game.
+      operationId: getGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to get
+          required: true
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    put:
+      tags:
+        - games
+      summary: Update a game
+      description: Update an existing game. For ease of implementation, all fields are required from the client.
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    delete:
+      tags:
+        - games
+      summary: Delete a game
+      description: Delete an existing game. When deleting data, it's useful to send the deleted record back to the client so they can re-create it if deletion was a mistake.
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+components:
+  schemas:
+    CreateUser:
+      type: object
+      required: [name, email, phone]
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          example: "john.doe@example.com"
+        phone:
+          type: string
+          example: "+123456789"
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          example: "john.doe@example.com"
+        phone:
+          type: string
+          example: "+123456789"
+        createdAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        updatedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+    AllUsers:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+
+    CreateGame:
+      type: object
+      required: [title, gameStudio, genre, numberOfPlayers]
+      properties:
+        title:
+          type: string
+          example: "Game Title"
+        gameStudio:
+          type: string
+          example: "Epic Games"
+        genre:
+          type: string
+          example: "Action"
+        numberOfPlayers:
+          type: integer
+          example: 2
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Game Title"
+        gameStudio:
+          type: string
+          example: "Epic Games"
+        genre:
+          type: string
+          example: "Action"
+        numberOfPlayers:
+          type: integer
+          example: 2
+        createdAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        updatedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
