@@ -1,0 +1,355 @@
+openapi: 3.1.0
+info:
+  title: Java Security Exercise - Core Criteria
+  description: Extension Criteria for Java API Cinema Challenge
+  version: 0.2.3
+  contact:
+    name: Cinema Booking Challenge
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: libraries
+  - name: games
+
+paths:
+  /libraries:
+    post:
+      tags:
+        - libraries
+      summary: Create library
+      description: Create a new library
+      operationId: createLibrary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLibrary'
+      responses:
+        '201':
+          description: Successfully created a new library
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Library'
+        '400':
+          description: "Could not create book, please check all required fields are correct."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+    get:
+      tags:
+        - libraries
+      summary: Get Libraries
+      description: Get all of the libraries in the list
+      operationId: getLibraries
+      responses:
+        '200':
+          description: Successfully returned a list of all libraries
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllLibraries'
+  /libraries/{id}:
+    put:
+      tags:
+        - libraries
+      summary: Update a library
+      description: Update the specified library
+      operationId: updateLibrary
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the library to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLibrary'
+      responses:
+        '201':
+          description: Successfully updated the specified library
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Library'
+        '400':
+          description: "Could not update the library, please check all required fields are correct."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: "No library with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - libraries
+      summary: Delete a library
+      description: Delete the specified library
+      operationId: deleteLibrary
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the library to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified library
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Library'
+        '404':
+          description: "No libraries with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    get:
+      tags:
+        - libraries
+      summary: Get a library
+      description: Get a specific library by id
+      operationId: getSpecificLibrary
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the library to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get the specified library from the list given its ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Library'
+        '404':
+          description: "No libraries with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create game
+      description: Create a new game
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully create a new game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: "Could not create game, please check all required fields are correct."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+    get:
+      tags:
+        - games
+      summary: Get a game
+      description: Get a list of games
+      operationId: getGame
+      responses:
+        '200':
+          description: Successfully returned a list of all games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+  /games/{id}:
+    put:
+      tags:
+        - games
+      summary: Update a game
+      description: Update the specified game
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the library to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully updated the specified library
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: "Could not update the game, please check all required fields are correct."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: "No game with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - games
+      summary: Delete a game
+      description: Delete the specified game
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the library to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: "No games with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    get:
+      tags:
+        - games
+      summary: Get a game
+      description: Get a specific game by id
+      operationId: getSpecificGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the library to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get the specified game from the list given its ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: "No games with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+components:
+  schemas:
+    CreateLibrary:
+      type: object
+      required: [ name ]
+      properties:
+        name:
+          type: string
+          example: "Oslo Library"
+
+    Library:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Oslo Library"
+        createdAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        updatedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+    AllLibraries:
+      type: array
+      items:
+        $ref: '#/components/schemas/Library'
+    CreateGame:
+      type: object
+      required: [ name ]
+      properties:
+        name:
+          type: string
+          example: "Oslo Library"
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Doom 4"
+        gameStudio:
+          type: string
+          example: "Bethesda"
+        ageRating:
+          type: integer
+          example: 18
+        genre:
+          type: string
+          example: "Action"
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
+    Error400:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "bad request"
+    Error404:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "not found"
