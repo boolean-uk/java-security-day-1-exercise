@@ -1,5 +1,6 @@
 package com.booleanuk.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,6 +31,7 @@ public class Game {
     private String genre;
 
     @OneToMany(mappedBy = "game")
+    @JsonIgnore
     private List<BorrowedGame> borrowedGames;
 
     public Game(String title, int ageRating, String gameStudio, String genre) {
