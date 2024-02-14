@@ -21,4 +21,8 @@ public interface BorrowedGameRepository extends JpaRepository<BorrowedGame, Inte
             "JOIN b.user u " +
             "WHERE u.id = :userId")
     List<BorrowedGameDto> findBorrowedGamesByUserId(int userId);
+
+    // Get game if it is currently lent out
+    @Query("SELECT b FROM BorrowedGame b JOIN b.game g WHERE g.id = :gameId AND b.returnDate IS NULL")
+    List<BorrowedGame> findIsBorrowedByGameId(int gameId);
 }

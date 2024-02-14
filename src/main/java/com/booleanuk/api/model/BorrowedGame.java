@@ -34,4 +34,8 @@ public class BorrowedGame {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate returnDate;
 
+    public BorrowedGame(User user, Game game) {
+        this.user = user;
+        this.game = game;
+    }
 }
