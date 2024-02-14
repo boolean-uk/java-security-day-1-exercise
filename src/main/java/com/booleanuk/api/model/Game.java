@@ -33,6 +33,12 @@ public class Game {
     @JsonIncludeProperties({"id", "name", "createdAt", "updatedAt"})
     private Library library;
 
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    @JsonIncludeProperties({"id", "name", "createdAt", "updatedAt"})
+    private User user;
+
     public Game(String title, String gameStudio, int ageRating, String genre, Library library) {
         this.title = title;
         this.gameStudio = gameStudio;
