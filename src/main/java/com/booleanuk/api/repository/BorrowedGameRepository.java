@@ -14,10 +14,11 @@ public interface BorrowedGameRepository extends JpaRepository<BorrowedGame, Inte
             "JOIN b.user u " +
             "WHERE g.id = :gameId")
     List<BorrowedGameDto> findBorrowedGamesByGameId(int gameId);
+
     @Query("SELECT new com.booleanuk.api.dto.BorrowedGameDto(b.id, g.title, u.username, b.borrowDate, b.returnDate) " +
             "FROM BorrowedGame b " +
             "JOIN b.game g " +
             "JOIN b.user u " +
-            "WHERE g.id = :userId")
+            "WHERE u.id = :userId")
     List<BorrowedGameDto> findBorrowedGamesByUserId(int userId);
 }
