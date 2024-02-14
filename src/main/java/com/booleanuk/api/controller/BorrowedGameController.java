@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -48,9 +49,26 @@ public class BorrowedGameController {
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "user not found"));
         Game game = this.gameRepository.findById(gameId)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "game not found"));
+        if (user.getDob().isAfter(LocalDate.now().minusYears(game.getAgeRating()))) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "User is too young!!!");
+        }
         BorrowedGame createdBorrowedGame = this.repository.save(new BorrowedGame(user, game));
 
-        return ResponseEntity.ok(new Response<>(this.translateToDto(createdBorrowedGame)));
+        return new ResponseEntity<>(new Response<>(this.translateToDto(createdBorrowedGame)), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/users/{userId}/games/{gameId}")
+    public ResponseEntity<Response<BorrowedGameDto>> returnGame(@PathVariable int userId, @PathVariable int gameId) {
+        List<BorrowedGame> borrowedGames = this.repository.findIsBorrowedByGameId(gameId);
+        if (borrowedGames.isEmpty()) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "game not found");
+        } else if (borrowedGames.get(0).getUser().getId() != userId) {
+            throw new ApiException(HttpStatus.NOT_FOUND, "Game not lent to this user");
+        }
+        BorrowedGame borrowedGame = borrowedGames.get(0);
+        borrowedGame.setReturnDate(LocalDate.now());
+
+        return new ResponseEntity<>(new Response<>(this.translateToDto(this.repository.save(borrowedGame))), HttpStatus.CREATED);
     }
 
     public BorrowedGameDto translateToDto(BorrowedGame borrowedGame) {
