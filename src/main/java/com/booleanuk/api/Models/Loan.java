@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "name")
+@Table(name = "loans")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,4 +31,9 @@ public class Loan {
 
     @Column
     private String loanedTo;
+
+    public Loan(String loanedFrom, String loanedTo){
+        this.loanedFrom = loanedFrom;
+        this.loanedTo = loanedTo;
+    }
 }

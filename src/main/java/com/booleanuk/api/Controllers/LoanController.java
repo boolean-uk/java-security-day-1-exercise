@@ -13,7 +13,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RequestMapping("loan")
+import java.util.List;
+
+@RestController
+@RequestMapping("loans")
 public class LoanController {
     @Autowired
     private LoanRepository repo;
@@ -25,9 +28,9 @@ public class LoanController {
     private VideoGameRepository videoGames;
 
     @PostMapping
-    public ResponseEntity<Response<?>> newLoan(@RequestBody Loan loan, @RequestParam int videoGameId, @RequestParam int userId){
-        VideoGame videoGame = videoGames.findById(videoGameId).orElse(null);
-        User user = users.findById(userId).orElse(null);
+    public ResponseEntity<Response<?>> newLoan(@RequestBody Loan loan, @RequestParam int video_game_id, @RequestParam int user_id){
+        VideoGame videoGame = videoGames.findById(video_game_id).orElse(null);
+        User user = users.findById(user_id).orElse(null);
 
         if (videoGame == null || user == null){
             ErrorResponse notFound = new ErrorResponse();
@@ -36,14 +39,46 @@ public class LoanController {
             return new ResponseEntity<>(notFound, HttpStatus.NOT_FOUND);
         }
 
+        if (loan.getLoanedTo() == null || loan.getLoanedFrom() == null){
+            ErrorResponse badRequest = new ErrorResponse();
+            badRequest.set("bad request");
+
+            return new ResponseEntity<>(badRequest, HttpStatus.BAD_REQUEST);
+        }
+
         loan.setVideoGame(videoGame);
         loan.setUser(user);
-        repo.save(loan);
+
+
+        Response<Loan> loanResponse = new Response<>();
+        loanResponse.set(repo.save(loan));
+
+        return new ResponseEntity<>(loanResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<Response<List<Loan>>> getAll(){
+        Response<List<Loan>> loanResponse = new Response<>();
+        loanResponse.set(repo.findAll());
+
+        return ResponseEntity.ok(loanResponse);
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<Response<?>> getOne(@PathVariable int id){
+        Loan loan = repo.findById(id).orElse(null);
+
+        if (loan == null){
+            ErrorResponse notFound = new ErrorResponse();
+            notFound.set("not found");
+
+            return new ResponseEntity<>(notFound, HttpStatus.NOT_FOUND);
+        }
 
         Response<Loan> loanResponse = new Response<>();
         loanResponse.set(loan);
 
-        return new ResponseEntity<>(loanResponse, HttpStatus.CREATED);
+        return ResponseEntity.ok(loanResponse);
     }
 
     @DeleteMapping("{id}")
