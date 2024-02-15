@@ -1,6 +1,8 @@
 package com.booleanuk.api.controllers;
 
+import com.booleanuk.api.models.BorrowGame;
 import com.booleanuk.api.models.Game;
+import com.booleanuk.api.repositories.BorrowGameRepository;
 import com.booleanuk.api.repositories.GameRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 public class GameController {
     private GameRepository gameRepository;
+    private BorrowGameRepository borrowGameRepository;
 
     @GetMapping
     public List<Game> getAll() {
@@ -35,6 +38,15 @@ public class GameController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return gameRepository.findById(id).get();
+    }
+
+    @GetMapping("{id}/history")
+    public List<BorrowGame> getBorrowedGames(@PathVariable int id) {
+        if (gameRepository.findById(id).isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        Game game = gameRepository.findById(id).get();
+        return borrowGameRepository.findAllByGame(game).get();
     }
 
     @PutMapping("{id}")

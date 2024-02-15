@@ -40,7 +40,7 @@ public class CustomerController {
         return customerRepository.findById(id).get();
     }
 
-    @GetMapping("{id}/games")
+    @GetMapping("{id}/history")
     public List<BorrowGame> getBorrowedGames(@PathVariable int id) {
         if (customerRepository.findById(id).isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

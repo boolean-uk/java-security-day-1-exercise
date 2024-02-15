@@ -1,6 +1,5 @@
 package com.booleanuk.api.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -26,6 +25,7 @@ public class BorrowGame {
     @JoinColumn(name = "customer_id")
     @JsonIncludeProperties(value = {"id", "name"})
     private Customer customer;
+    // Could be calculated from the endDate...
     private boolean isActive = false;
     @CreationTimestamp
     private LocalDateTime startDate;
