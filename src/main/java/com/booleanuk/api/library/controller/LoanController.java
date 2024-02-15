@@ -30,7 +30,7 @@ public class LoanController {
     private GameRepository gameRepository;
 
     @PostMapping("/{userId}/loans/{gameId}")
-    public ResponseEntity<Response<?>> createLoan(@PathVariable int userId, @PathVariable int gameId, @RequestBody Loan loan) {
+    public ResponseEntity<Response<?>> createLoan(@PathVariable int userId, @PathVariable int gameId) {
 
         User user = this.getAUser(userId);
         Game game = this.getAGame(gameId);
@@ -40,8 +40,7 @@ public class LoanController {
             return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
         }
 
-        loan.setGame(game);
-        loan.setUser(user);
+        Loan loan = new Loan(game, user);
         Loan savedLoan = this.loanRepository.save(loan);
         LoanResponse loanResponse = new LoanResponse();
         loanResponse.set(savedLoan);
