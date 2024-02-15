@@ -1,0 +1,425 @@
+openapi: 3.1.0
+info:
+  title: Java API Video Games & Users
+  description: Core And Extension API for the Requests and Responses for Video Games & Users
+  version: 0.0.4
+  contact:
+    name: Video Games, Users and Loans
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name : videogames
+  - name : users
+  - name : loans
+paths:
+  /videogames:
+    post:
+      tags:
+        - videogames
+      operationId: videogamesPost
+      summary: Create a Video Game
+      description: New video game creation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        '201':
+          description: Video Game created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+    get:
+      tags:
+        - videogames
+      summary: Get All Video Games
+      description: Get all of the listed videogames
+      operationId: getVideoGames
+      responses:
+        '200':
+          description: Get all videogames
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllVideoGames'
+  /videogames/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          description: Id of the videogame
+          required: true
+          schema:
+            type: integer
+      tags:
+        - videogames
+      summary: Get a specific Video Game
+      description: Get one videogame from the list
+      operationId: getSpecificVideoGame
+      responses:
+        '200':
+          description: Get a single videogame
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+
+    put:
+      tags:
+        - videogames
+      summary: Update a Video Game
+      description: use the ID of a videogame to update it using the payload
+      operationId: updateVideoGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the videogame to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        '201':
+          description: Video Game successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+    delete:
+      tags:
+        - videogames
+      summary: Delete an Video Game
+      description: Delete an videogame using their ID
+      operationId: deleteVideoGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the videogame to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the Video Game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+
+
+
+
+  /users:
+    post:
+      tags:
+        - users
+      operationId: usersPost
+      summary: Create a User
+      description: New user creation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    get:
+      tags:
+        - users
+      summary: Get All Users
+      description: Get all of the listed users
+      operationId: getUsers
+      responses:
+        '200':
+          description: Get all users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+  /users/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          description: Id of the user
+          required: true
+          schema:
+            type: integer
+      tags:
+        - users
+      summary: Get a specific User
+      description: Get one user from the list
+      operationId: getSpecificUser
+      responses:
+        '200':
+          description: Get a single user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    put:
+      tags:
+        - users
+      summary: Update a User
+      description: use the ID of a user to update it using the payload
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: User successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags:
+        - users
+      summary: Delete a User
+      description: Delete an user using their ID
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+
+
+
+  /users/{user_id}/videogames/{video_game_id}/loans:
+    post:
+      tags:
+        - loans
+      operationId: loansPost
+      parameters:
+        - name: user_id
+          in: path
+          description: The ID of the user
+          required: true
+          schema:
+            type: integer
+        - name: video_game_id
+          in: path
+          description: The ID of the video game
+          required: true
+          schema:
+            type: integer
+      summary: Create a Loan
+      description: New loan creation
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoan'
+      responses:
+        '201':
+          description: Loan created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+    get:
+      tags:
+        - loans
+      summary: Get All Loans
+      description: Get all of the listed loans
+      operationId: getLoans
+      parameters:
+        - name: user_id
+          in: path
+          description: The ID of the user
+          required: true
+          schema:
+            type: integer
+        - name: video_game_id
+          in: path
+          description: The ID of the video game
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get all loans
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllLoans'
+  /users/{user_id}/videogames/{video_game_id}/loans/{id}:
+    put:
+      tags:
+        - loans
+      summary: Update a Loan
+      description: use the ID of a loan to update it using the payload
+      operationId: updateLoan
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the loan to update
+          required: true
+          schema:
+            type: integer
+        - name: user_id
+          in: path
+          description: The ID of the user
+          required: true
+          schema:
+            type: integer
+        - name: video_game_id
+          in: path
+          description: The ID of the video game
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoan'
+      responses:
+        '201':
+          description: Loan successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+
+
+components:
+  schemas:
+    CreateVideoGame:
+      type: object
+      required: [title, studio, rating, numberOfPlayers, genre]
+      properties:
+        title:
+          type: string
+          example: "The Last of Us Part I"
+        studio:
+          type: string
+          example: "Naughty Dog"
+        rating:
+          type: string
+          example: "8/10"
+        num_of_players:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Adventure"
+    VideoGame:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 6
+        title:
+          type: string
+          example: "The Last of Us Part I"
+        studio:
+          type: string
+          example: "Naughty Dog"
+        rating:
+          type: string
+          example: "8/10"
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Adventure"
+    AllVideoGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/VideoGame'
+
+
+
+
+    CreateUser:
+      type: object
+      required: [name, email, phone, loaned_games]
+      properties:
+        name:
+          type: string
+          example: "Gustav"
+        email:
+          type: string
+          example: "gustav@email.com"
+        phone:
+          type: string
+          example: "239479234"
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: "Gustav"
+        email:
+          type: string
+          example: "gustav@email.com"
+        phone:
+          type: string
+          example: "239479234"
+    AllUsers:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+
+
+
+
+    CreateLoan:
+      type: object
+      required: [currently_loaned]
+      properties:
+        currentlyLoaned:
+          type: boolean
+          example: true
+    Loan:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        currentlyLoaned:
+          type: boolean
+          example: true
+    AllLoans:
+      type: array
+      items:
+        $ref: '#/components/schemas/Loan'
