@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @RestController
-@RequestMapping("books")
+@RequestMapping("videogames")
 public class VideoGameController {
     @Autowired
     private VideoGameRepository videoGameRepository;
