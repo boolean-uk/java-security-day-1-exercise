@@ -4,6 +4,7 @@ import com.booleanuk.api.exceptions.CustomDataNotFoundException;
 import com.booleanuk.api.exceptions.CustomParamaterConstraintException;
 import com.booleanuk.api.model.Game;
 import com.booleanuk.api.model.Library;
+import com.booleanuk.api.model.User;
 import com.booleanuk.api.repository.GameRepository;
 import com.booleanuk.api.repository.LibraryRepository;
 import com.booleanuk.api.response.Response;
@@ -36,9 +37,13 @@ public class GameController {
 
         Game game1 = new Game(game.getTitle(), game.getGameStudio(),game.getAgeRating(),game.getGenre(), library);
 
-        checkValidInput(game1);
+
 
         library.getGames().add(game1);
+        game1.setLoans(new ArrayList<>());
+        game1.setLoansHistory(new ArrayList<>());
+        checkValidInput(game1);
+
         this.gameRepository.save(game1);
 
         return new ResponseEntity<>(new SuccessResponse(game1), HttpStatus.CREATED);

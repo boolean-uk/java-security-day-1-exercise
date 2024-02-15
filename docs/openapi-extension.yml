@@ -11,6 +11,7 @@ tags:
   - name: libraries
   - name: games
   - name: users
+  - name: loans
 
 paths:
   /users:
@@ -50,7 +51,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AllLibraries'
+                $ref: '#/components/schemas/AllUsers'
   /users/{id}:
     put:
       tags:
@@ -84,7 +85,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error400'
         '404':
-          description: "No library with that id were found"
+          description: "No user with that id were found"
           content:
             application/json:
               schema:
@@ -104,11 +105,11 @@ paths:
             type: integer
       responses:
         '200':
-          description: Successfully deleted the specified library
+          description: Successfully deleted the specified user
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/User'
         '404':
           description: "No users with that id were found"
           content:
@@ -124,23 +125,159 @@ paths:
       parameters:
         - name: id
           in: path
-          description: The ID of the library to retrieve
+          description: The ID of the user to retrieve
           required: true
           schema:
             type: integer
       responses:
         '200':
-          description: Get the specified library from the list given its ID
+          description: Get the specified user from the list given its ID
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/User'
         '404':
-          description: "No users with that id were found"
+          description: "No user with that id were found"
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error404'
+  /loans:
+    get:
+      tags:
+        - loans
+      summary: Get loans
+      description: Get all of the user loans in the list
+      operationId: getLoans
+      responses:
+        '200':
+          description: Successfully returned a list of all loans
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllLoans'
+
+
+
+  /loans{id}:
+    delete:
+      tags:
+        - loans
+      summary: Delete a loan
+      description: Delete the specified loan
+      operationId: deleteLoan
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the loan to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '404':
+          description: "No loans with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+  /loans/game/{id}/history:
+    get:
+      tags:
+        - loans
+      summary: Get loan history
+      description: Get a specific loan history from specific game
+      operationId: getGameLoans
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to get loans retrieved
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get the specified list given its game ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllLoans'
+        '404':
+          description: "No loans with that game id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+  /loans/user/{id}/history:
+    get:
+      tags:
+        - loans
+      summary: Get loan history
+      description: Get a specific loan history from specific user
+      operationId: getUserLoans
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to get loans retrieved
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get the specified list given its user ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllLoans'
+        '404':
+          description: "No loans with that user id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+  /loans/user/{id}/game/{gameId}:
+    post:
+      tags:
+        - loans
+      summary: Create loan
+      description: Create a new loan
+      operationId: createLoan
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to get loans retrieved
+          required: true
+          schema:
+            type: integer
+        - name: gameId
+          in: path
+          description: The gameID of the game to get loans retrieved
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoan'
+      responses:
+        '201':
+          description: Successfully created a new loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '400':
+          description: "Could not create loan, please check all required fields are correct."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
   /libraries:
     post:
       tags:
@@ -439,7 +576,6 @@ components:
         name:
           type: string
           example: "Oslo Library"
-
     User:
       type: object
       properties:
@@ -457,10 +593,35 @@ components:
           type: string
           format: DateTime
           example: "2023-03-14T11:01:56.633+00:00"
-    AllUser:
+    AllUsers:
       type: array
       items:
-        $ref: '#/components/schemas/Library'
+        $ref: '#/components/schemas/User'
+    CreateLoan:
+      type: object
+      required: [ title ]
+      properties:
+        title:
+          type: string
+          example: "loan"
+    Loan:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        createdAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        updatedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+    AllLoans:
+      type: array
+      items:
+        $ref: '#/components/schemas/Loan'
     CreateLibrary:
       type: object
       required: [ name ]
@@ -468,7 +629,6 @@ components:
         name:
           type: string
           example: "Oslo Library"
-
     Library:
       type: object
       properties:

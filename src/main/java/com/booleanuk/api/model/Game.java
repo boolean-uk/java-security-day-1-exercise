@@ -1,10 +1,13 @@
 package com.booleanuk.api.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIncludeProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -33,9 +36,16 @@ public class Game {
     @JsonIncludeProperties({"id", "name", "createdAt", "updatedAt"})
     private Library library;
 
+    @OneToMany(mappedBy = "game")
+    @JsonIgnoreProperties(value = "game", allowSetters = true)
+    private List<Loan> loansHistory;
+
+    @OneToMany(mappedBy = "game")
+    @JsonIgnoreProperties(value = "game", allowSetters = true)
+    private List<Loan> loans;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     @JsonIncludeProperties({"id", "name", "createdAt", "updatedAt"})
     private User user;
 
@@ -45,5 +55,14 @@ public class Game {
         this.ageRating = ageRating;
         this.genre = genre;
         this.library = library;
+        this.user = null;
     }
+
+
+    public Game(int id) {
+        this.id = id;
+    }
+
+
+
 }

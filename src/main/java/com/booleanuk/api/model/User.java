@@ -28,11 +28,24 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties(value = "user", allowSetters = true)
+    private List<Loan> loansHistory;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties(value = "user", allowSetters = true)
     private List<Game> games;
+
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnoreProperties(value = "user", allowSetters = true)
+    private List<Loan> loans;
 
     public User(String name, String createdAt, String updatedAt) {
         this.name = name;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public User(int id) {
+        this.id = id;
     }
 }

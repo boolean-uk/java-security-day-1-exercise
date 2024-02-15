@@ -17,71 +17,76 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+@RestController
+@RequestMapping("users")
 public class UserController {
 
     @Autowired
     private UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<Response<?>> createLibrary(@RequestBody User library) {
+    public ResponseEntity<Response<?>> createUser(@RequestBody User user) {
 
-        User library1 = new User(library.getName(), DateCreater.getCurrentDate(), DateCreater.getCurrentDate());
-        checkValidInput(library1);
-        this.userRepository.save(library1);
+        User user1 = new User(user.getName(), DateCreater.getCurrentDate(), DateCreater.getCurrentDate());
+        checkValidInput(user1);
+        this.userRepository.save(user1);
 
-        return new ResponseEntity<>(new SuccessResponse(library1), HttpStatus.CREATED);
+        return new ResponseEntity<>(new SuccessResponse(user1), HttpStatus.CREATED);
     }
 
 
     @GetMapping
-    public ResponseEntity<List<User>> getLibraries() {
+    public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<>(this.userRepository.findAll(), HttpStatus.OK);
     }
 
 
 
     @GetMapping("{id}")
-    public ResponseEntity<Response<?>> getSpecificLibrary(@PathVariable(name = "id") int id) {
-        User library = this.getALibrary(id);
+    public ResponseEntity<Response<?>> getSpecificUser(@PathVariable(name = "id") int id) {
+        User library = this.getAUser(id);
 
         return new ResponseEntity<>(new SuccessResponse(library), HttpStatus.OK);
 
     }
 
     @PutMapping("{id}")
-    public ResponseEntity<Response<?>> updateLibrary(@PathVariable (name = "id") int id, @RequestBody User library) {
-        Library library1 = getALibrary(id);
-        library1.setUpdatedAt(DateCreater.getCurrentDate());
-        library1.setName(library.getName());
-        if(library1.getGames() == null) {
-            library1.setGames(new ArrayList<>());
+    public ResponseEntity<Response<?>> updateUser(@PathVariable (name = "id") int id, @RequestBody User library) {
+        User user1 = getAUser(id);
+        user1.setUpdatedAt(DateCreater.getCurrentDate());
+        user1.setName(library.getName());
+        if(user1.getGames() == null) {
+            user1.setGames(new ArrayList<>());
         } else {
-            library1.setGames(library.getGames());
+            user1.setGames(library.getGames());
         }
 
-        this.checkValidInput(library1);
+        this.checkValidInput(user1);
 
-        return new ResponseEntity<>(new SuccessResponse(library1), HttpStatus.CREATED);
+        return new ResponseEntity<>(new SuccessResponse(user1), HttpStatus.CREATED);
 
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Response<?>> deleteLibrary(@PathVariable (name = "id") int id) {
-        User user = this.getALibrary(id);
+    public ResponseEntity<Response<?>> deleteUser(@PathVariable (name = "id") int id) {
+        User user = this.getAUser(id);
 
-        this.userRepository.delete(this.getALibrary(id));
+        this.userRepository.delete(this.getAUser(id));
 
         return new ResponseEntity<>(new SuccessResponse(user), HttpStatus.OK);
 
     }
 
-    private User getALibrary(int id) {
-        return this.userRepository.findById(id).orElseThrow(() -> new CustomDataNotFoundException("No library with that ID found"));
+    private User getAUser(int id) {
+        return this.userRepository.findById(id).orElseThrow(() -> new CustomDataNotFoundException("No user with that ID found"));
     }
 
 
-    private void checkValidInput(User library) {
-        if(library.getCreatedAt() == null || library.getName() == null || library.getUpdatedAt() == null) {
+
+
+    private void checkValidInput(User user) {
+        if(user.getCreatedAt() == null || user.getName() == null || user.getUpdatedAt() == null) {
             throw new CustomParamaterConstraintException("Bad request");
         }
     }
