@@ -1,0 +1,397 @@
+openapi: 3.1.0
+info:
+  title: Java API Security Day 1 - Core Criteria
+  description: Core Criteria for the Java Security Lessons
+  version: 0.2.3
+  contact:
+    name: Video Game Library Team
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: videogames
+    description: Operations related to video games
+  - name: users
+    description: Operations related to users
+paths:
+  /login:
+    get:
+      tags:
+        - users
+      summary: User login
+      description: Redirects to the login page.
+      operationId: loginUser
+      responses:
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '200':
+          description: Redirect to login page
+
+  /users:
+    get:
+      tags:
+        - users
+      summary: Get all users
+      description: Returns a list of all users.
+      operationId: getAllUsers
+      responses:
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+    post:
+      tags:
+        - users
+      summary: Create a user
+      description: Creates a new user with the given details.
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Get a user by ID
+      description: Returns a single user by their ID.
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '200':
+          description: A single user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: Updates the user with the specified ID.
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      description: Deletes the user with the specified ID.
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '200':
+          description: User deleted successfully
+
+  /videogames:
+    get:
+      tags:
+        - videogames
+      summary: Get all video games
+      description: Returns a list of all video games.
+      operationId: getAllVideoGames
+      responses:
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '200':
+          description: A list of video games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGameListResponse'
+    post:
+      tags:
+        - videogames
+      summary: Create a video game
+      description: Creates a new video game with the given details.
+      operationId: createVideoGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VideoGame'
+      responses:
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '201':
+          description: Video game created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGameResponse'
+
+  /videogames/{id}:
+    get:
+      tags:
+        - videogames
+      summary: Get a video game by ID
+      description: Retrieve a single video game by its ID.
+      operationId: getVideoGameById
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: A single video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Video game not found
+
+    put:
+      tags:
+        - videogames
+      summary: Update a video game
+      description: Update an existing video game by ID.
+      operationId: updateVideoGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        '200':
+          description: Successfully updated the video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Video game not found
+
+    delete:
+      tags:
+        - videogames
+      summary: Delete a video game
+      description: Remove an existing video game by ID.
+      operationId: deleteVideoGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        default:
+          description: Unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Video game not found
+
+components:
+  schemas:
+    CreateVideoGame:
+      type: object
+      required: [title, genre, developer, publisher, year, ageRating, userId]
+      properties:
+        title:
+          type: string
+          example: "Elden Ring"
+        genre:
+          type: string
+          example: "Action RPG"
+        developer:
+          type: string
+          example: "FromSoftware"
+        publisher:
+          type: string
+          example: "Bandai Namco Entertainment"
+        year:
+          type: integer
+          example: 2022
+        ageRating:
+          type: integer
+          example: 16
+        userId:
+          type: integer
+          description: "The ID of the user associated with the video game"
+          example: 1
+
+    VideoGame:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Elden Ring"
+        genre:
+          type: string
+          example: "Action RPG"
+        developer:
+          type: string
+          example: "FromSoftware"
+        publisher:
+          type: string
+          example: "Bandai Namco Entertainment"
+        year:
+          type: integer
+          example: 2022
+        ageRating:
+          type: integer
+          example: 16
+        user:
+          $ref: '#/components/schemas/User'
+        borrowed:
+          type: boolean
+          example: false
+        currentBorrower:
+          $ref: '#/components/schemas/User'
+        userGameBorrowers:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Jane Doe"
+        phone:
+          type: string
+          example: "+1234567890"
+        email:
+          type: string
+          example: "jane.doe@example.com"
+        videoGames:
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoGame'
+          description: "List of video games owned by the user"
+        borrowedGames:
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoGame'
+          description: "List of video games borrowed by the user"
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A human-readable description of the error.
+          example: "Internal Server Error"
+        code:
+          type: integer
+          description: A specific error code if applicable.
+          example: 500
