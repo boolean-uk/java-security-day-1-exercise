@@ -32,11 +32,6 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     @JsonIgnoreProperties(value = "user")
-    private List<Game> games;
-
-
-    @OneToMany(mappedBy = "user")
-    @JsonIgnoreProperties(value = "user")
     private List<Loan> loans;
 
     public User(String name, String createdAt, String updatedAt) {

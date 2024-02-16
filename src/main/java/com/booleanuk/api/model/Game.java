@@ -44,10 +44,6 @@ public class Game {
     @JsonIgnoreProperties(value = "game", allowSetters = true)
     private List<Loan> loans;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonIncludeProperties({"id", "name", "createdAt", "updatedAt"})
-    private User user;
 
     public Game(String title, String gameStudio, int ageRating, String genre, Library library) {
         this.title = title;
@@ -55,7 +51,6 @@ public class Game {
         this.ageRating = ageRating;
         this.genre = genre;
         this.library = library;
-        this.user = null;
     }
 
 

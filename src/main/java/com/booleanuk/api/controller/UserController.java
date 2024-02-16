@@ -34,9 +34,6 @@ public class UserController {
         if(user1.getLoans() == null) {
             user1.setLoans(new ArrayList<>());
         }
-        if(user1.getGames() == null) {
-            user1.setGames(new ArrayList<>());
-        }
         this.userRepository.save(user1);
 
         return new ResponseEntity<>(new SuccessResponse(user1), HttpStatus.CREATED);
@@ -63,11 +60,7 @@ public class UserController {
         User user1 = getAUser(id);
         user1.setUpdatedAt(DateCreater.getCurrentDate());
         user1.setName(library.getName());
-        if(user1.getGames() == null) {
-            user1.setGames(new ArrayList<>());
-        } else {
-            user1.setGames(library.getGames());
-        }
+
 
         this.checkValidInput(user1);
 

@@ -159,7 +159,7 @@ paths:
 
 
 
-  /loans{id}:
+  /loans/{id}:
     delete:
       tags:
         - loans
