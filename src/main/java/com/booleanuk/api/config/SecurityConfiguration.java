@@ -20,9 +20,9 @@ public class SecurityConfiguration {
         http
                 .csrf((csrf) -> csrf.disable())
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/libraries", "/libraries/**").authenticated()
-                        .requestMatchers("/users", "/users/**").authenticated()
-                        .requestMatchers("/loans", "/loans/**").authenticated()
+                        .requestMatchers("/libraries", "/libraries/**").hasRole("ADMIN")
+                        .requestMatchers("/users", "/users/**").hasRole("ADMIN")
+                        .requestMatchers("/loans", "/loans/**").hasRole("ADMIN")
 
                 )
                 .formLogin((form) -> form

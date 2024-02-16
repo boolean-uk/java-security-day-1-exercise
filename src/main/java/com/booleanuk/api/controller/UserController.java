@@ -30,6 +30,13 @@ public class UserController {
 
         User user1 = new User(user.getName(), DateCreater.getCurrentDate(), DateCreater.getCurrentDate());
         checkValidInput(user1);
+
+        if(user1.getLoans() == null) {
+            user1.setLoans(new ArrayList<>());
+        }
+        if(user1.getGames() == null) {
+            user1.setGames(new ArrayList<>());
+        }
         this.userRepository.save(user1);
 
         return new ResponseEntity<>(new SuccessResponse(user1), HttpStatus.CREATED);

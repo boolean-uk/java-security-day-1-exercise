@@ -1,10 +1,10 @@
 openapi: 3.1.0
 info:
   title: Java Security Exercise - Core Criteria
-  description: Extension Criteria for Java API Cinema Challenge
+  description: Extension Criteria for Java Security Exercise
   version: 0.2.3
   contact:
-    name: Cinema Booking Challenge
+    name: Java Security Exercise
 servers:
   - url: http://localhost:4000
 tags:
