@@ -25,12 +25,12 @@ public class Loan {
     @Column
     private String updatedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     @JsonIgnoreProperties( value = {"user", "loans", "loansHistory", "games"})
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "game_id")
     @JsonIgnoreProperties( value = {"user", "loans", "loansHistory"})
     private Game game;
