@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
-  title: Java API Security Day 1 - Core Criteria
-  description: Core Criteria for the Java Security Lessons
+  title: Java API Security Day 1 - Core and Extension Criteria
+  description: Core and Extension Criteria for the Java Security Lessons
   version: 0.2.3
   contact:
     name: Video Game Library Team
