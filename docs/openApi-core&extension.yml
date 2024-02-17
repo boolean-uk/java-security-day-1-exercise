@@ -1,0 +1,393 @@
+openapi: "3.1.0"
+info:
+  title: "Core Criteria & Extension"
+  description: "Core Criteria and Extension Java API, security-day-1"
+  version: "0.2.3"
+  contact:
+    name: "JPA security day 1"
+servers:
+  - url: "http://localhost:4000"
+tags:
+  - name: "users"
+  - name: "videoGames"
+paths:
+  /users:
+    get:
+      tags:
+        - "users"
+      summary: "Get Users"
+      description: "Get all users."
+      operationId: "getUsers"
+      responses:
+        "200":
+          description: "Successfully retrieved list of all users."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+    post:
+      tags:
+        - "users"
+      summary: "Create user"
+      description: "Create a new User."
+      operationId: "createUser"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        "201":
+          description: "Successfully created a new user."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "400":
+          description: "Invalid input."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+  /users/{id}:
+    get:
+      tags:
+        - "users"
+      summary: "Get User by ID"
+      description: "Get a specific User by their ID."
+      operationId: "getUserById"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "Successfully retrieved the user."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    put:
+      tags:
+        - "users"
+      summary: "Update User"
+      description: "Update a User identified by their ID."
+      operationId: "updateUser"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        "200":
+          description: "Successfully updated the user."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - "users"
+      summary: "Delete User"
+      description: "Delete a User by their ID."
+      operationId: "deleteUser"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "Successfully deleted the user."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+  /users/{id}/videogames:
+    get:
+      tags:
+        - "users"
+      summary: "Get VideoGames by User ID"
+      description: "Retrieve all video games associated with a specific user ID."
+      operationId: "getVideoGamesByUserId"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "Successfully retrieved the video games for the user."
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: '#/components/schemas/VideoGame'
+    post:
+      tags:
+        - "users"
+      summary: "Add VideoGame to User"
+      description: "Add a new video game to a user's collection."
+      operationId: "addVideoGameToUser"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        "201":
+          description: "Successfully added the new video game to the user."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        "400":
+          description: "Invalid input or missing fields."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        "404":
+          description: "User not found."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+  /videoGames:
+    post:
+      tags:
+        - "videoGames"
+      summary: "Create videoGame"
+      description: "Create a new VideoGame."
+      operationId: "createVideoGame"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        "201":
+          description: "Successfully created a new videoGame."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        "400":
+          description: "Could not create videoGame, please check all required fields are correct."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+    get:
+      tags:
+        - "videoGames"
+      summary: "Get VideoGames"
+      description: "Get all of the videoGames in the list."
+      operationId: "getVideoGames"
+      responses:
+        "200":
+          description: "Successfully get a list of all of the videoGames in the list."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllVideoGames'
+  /videoGames/{id}:
+    get:
+      tags:
+        - "videoGames"
+      summary: "Get a VideoGame"
+      description: "Get a specific videoGame by its id."
+      operationId: "getSpecificVideoGame"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "Get the specified videoGame from the list given its ID."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        "404":
+          description: "No VideoGames with that id were found."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    put:
+      tags:
+        - "videoGames"
+      summary: "Update a videoGame"
+      description: "Update the specified videoGame."
+      operationId: "updateVideoGame"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        "200":
+          description: "Successfully updated the specified videoGame."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        "404":
+          description: "No videoGames with that id were found."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - "videoGames"
+      summary: "Delete a videoGame"
+      description: "Delete the specified videoGame."
+      operationId: "deleteVideoGame"
+      parameters:
+        - name: "id"
+          in: "path"
+          required: true
+          schema:
+            type: "integer"
+      responses:
+        "200":
+          description: "Successfully deleted the specified videoGame."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        "404":
+          description: "No videoGames with that id were found."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+components:
+  schemas:
+    CreateUser:
+      type: "object"
+      required:
+        - "first_name"
+        - "last_name"
+        - "email"
+      properties:
+        first_name:
+          type: "string"
+          example: "Isaac"
+        last_name:
+          type: "string"
+          example: "Asimov"
+        email:
+          type: "string"
+          example: "isaac@monolith.com"
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          example: 1
+        first_name:
+          type: "string"
+          example: "Isaac"
+        last_name:
+          type: "string"
+          example: "Asimov"
+        email:
+          type: "string"
+          example: "isaac@monolith.com"
+    AllUsers:
+      type: "array"
+      items:
+        $ref: '#/components/schemas/User'
+    CreateVideoGame:
+      type: "object"
+      required:
+        - "title"
+        - "genre"
+        - "user_id"
+      properties:
+        title:
+          type: "string"
+          example: "2001: A Space Odyssey"
+        genre:
+          type: "string"
+          example: "Science Fiction"
+        user_id:
+          type: "integer"
+          example: 1
+    VideoGame:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          example: 1
+        title:
+          type: "string"
+          example: "2001: A Space Odyssey"
+        genre:
+          type: "string"
+          example: "Science Fiction"
+        user_id:
+          type: "integer"
+          example: 1
+    AllVideoGames:
+      type: "array"
+      items:
+        $ref: '#/components/schemas/VideoGame'
+    Error400:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+          example: "bad request"
+    Error404:
+      type: "object"
+      properties:
+        message:
+          type: "string"
+          example: "not found"
