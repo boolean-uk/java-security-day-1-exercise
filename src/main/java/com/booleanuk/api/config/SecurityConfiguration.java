@@ -15,18 +15,19 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf((csrf)-> csrf.disable())
-                .authorizeHttpRequests((requests) ->requests
-                        .requestMatchers("/videogames","/videogames/*").authenticated())
+                .csrf((csrf) -> csrf.disable())
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/users", "/users/**", "/videogames", "/videogames/**").authenticated()
+                        .anyRequest().permitAll())
                 .formLogin((form) -> form.loginPage("/login").permitAll())
                 .logout((logout) -> logout.permitAll());
         return http.build();
     }
+
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         UserDetails user = User.withDefaultPasswordEncoder()
                 .username("user")
                 .password("password")
@@ -34,5 +35,4 @@ public class SecurityConfiguration {
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
-
 }
