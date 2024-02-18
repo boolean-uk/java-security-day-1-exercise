@@ -1,4 +1,8 @@
 package com.booleanuk.api.response;
 
-public class VideoGameListResponse {
+import com.booleanuk.api.model.VideoGame;
+
+import java.util.List;
+
+public class VideoGameListResponse extends Response<List<VideoGame>> {
 }

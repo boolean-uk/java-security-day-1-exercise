@@ -1,4 +1,7 @@
 package com.booleanuk.api.repository;
 
-public class VideoGameRepository {
+import com.booleanuk.api.model.VideoGame;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface VideoGameRepository extends JpaRepository<VideoGame, Integer> {
 }

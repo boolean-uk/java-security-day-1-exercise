@@ -1,4 +1,6 @@
 package com.booleanuk.api.response;
 
-public class VideoGameResponse {
+import com.booleanuk.api.model.VideoGame;
+
+public class VideoGameResponse extends Response<VideoGame> {
 }
