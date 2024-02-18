@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  title: Video Game Library API
+  version: 1.0.0
+  description: API to manage information about video games.
+
+paths:
+  /games:
+    get:
+      summary: Get all video games
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                - id: 1
+                  title: "The Legend of Zelda: Breath of the Wild"
+                  gameStudio: "Nintendo"
+                  ageRating: "E10+"
+                  numberOfPlayers: 1
+                  genre: "Action-Adventure"
+                - id: 2
+                  title: "Red Dead Redemption 2"
+                  gameStudio: "Rockstar Games"
+                  ageRating: "Mature"
+                  numberOfPlayers: 1
+                  genre: "Action"
+                # Add more games as needed
+
+    post:
+      summary: Add a new video game
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              title: "Example Game"
+              gameStudio: "Example Studio"
+              ageRating: "Teen"
+              numberOfPlayers: 2
+              genre: "Example Genre"
+      responses:
+        '201':
+          description: Successful creation
+          content:
+            application/json:
+              example:
+                id: 3
+                title: "Example Game"
+                gameStudio: "Example Studio"
+                ageRating: "Teen"
+                numberOfPlayers: 2
+                genre: "Example Genre"
+
+  /games/{gameId}:
+    parameters:
+      - name: gameId
+        in: path
+        required: true
+        description: ID of the game to retrieve or update
+        schema:
+          type: integer
+    get:
+      summary: Get a specific video game by ID
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              example:
+                id: 1
+                title: "The Legend of Zelda: Breath of the Wild"
+                gameStudio: "Nintendo"
+                ageRating: "E10+"
+                numberOfPlayers: 1
+                genre: "Action-Adventure"
+
+    put:
+      summary: Update a specific video game by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            example:
+              title: "Updated Game Title"
+              gameStudio: "Updated Studio"
+              ageRating: "Mature"
+              numberOfPlayers: 2
+              genre: "Updated Genre"
+      responses:
+        '200':
+          description: Successful update
+          content:
+            application/json:
+              example:
+                id: 1
+                title: "Updated Game Title"
+                gameStudio: "Updated Studio"
+                ageRating: "Mature"
+                numberOfPlayers: 2
+                genre: "Updated Genre"
+
+    delete:
+      summary: Delete a specific video game by ID
+      responses:
+        '204':
+          description: Successful deletion
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  security:
+    - basicAuth: []
