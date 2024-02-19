@@ -1,0 +1,546 @@
+openapi: "3.0.2"
+info:
+  title: VideoGame Core
+  version: "1.0"
+servers:
+  - url: http://localhost:4000
+paths:
+  /video-games:
+    get:
+      tags:
+        - video games
+      summary: Get all video games
+      operationId: getAllGames
+      description: Get all video games
+      responses:
+        '200':
+          description: Returned all video games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllVideoGames'
+    post:
+      tags:
+        - video games
+      summary: Create a video game
+      operationId: postVideoGame
+      description: Create a video game
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        '201':
+          description: Created a video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+
+  /video-games/{id}:
+    get:
+      tags:
+        - video games
+      summary: Get specific video game
+      operationId: getVideoGame
+      description: Get specific video game
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to get
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returned a video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+    put:
+      tags:
+        - video games
+      summary: Update a video game
+      operationId: putVideoGame
+      description: Update a video game
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        '201':
+          description: Updated a video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+    delete:
+      tags:
+        - video games
+      summary: Delete a video game
+      operationId: deleteVideoGame
+      description: Delete a video game
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deleted a video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateVideoGame'
+  /users:
+    get:
+      tags:
+        - users
+      summary: Get all users
+      operationId: getAllUsers
+      description: Get all users
+      responses:
+        '200':
+          description: Returned all users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+    post:
+      tags:
+        - users
+      summary: Create a user
+      operationId: postUser
+      description: Create a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Created a user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Get specific user
+      operationId: getUser
+      description: Get specific user
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to get
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Returned a user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    put:
+      tags:
+        - users
+      summary: Update a user
+      operationId: putUser
+      description: Update a user
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Updated a user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      operationId: deleteUser
+      description: Create a user
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Created a user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateUser'
+  /loans:
+    get:
+      tags:
+        - loans
+      summary: Get all loans
+      operationId: getAllLoans
+      description: Get all loans
+      responses:
+        '200':
+          description: Returned all loans
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllLoans'
+  /loans/{id}:
+    get:
+      tags:
+        - loans
+      summary: Get loan by Id
+      operationId: getLoanById
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the loan
+          required: true
+          schema:
+            type: integer
+      description: Get a specific loan by id
+      responses:
+        '200':
+          description: Get loan by Id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+  /loans/{id}/return:
+    put:
+      tags:
+        - loans
+      summary: Return video game
+      operationId: returnLoan
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the loan
+          required: true
+          schema:
+            type: integer
+      description: Return video game to store
+      responses:
+        '201':
+          description: Get loan by Id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnedLoan'
+  /loans/userId/videoGameId:
+    post:
+      tags:
+        - loans
+      summary: Update a loan by Id
+      operationId: updateLoan
+      description: Update a loan
+      responses:
+        '201':
+          description: Created a new loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+
+
+components:
+  schemas:
+    CreateVideoGame:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Crash Bandicoot"
+        developer:
+          type: string
+          example: "Naughty Dog"
+        publisher:
+          type: string
+          example: "Sony Computer Entertainment"
+        year:
+          type: integer
+          example: 1996
+        rating:
+          type: string
+          example: "PEGI 3"
+        genre:
+          type: string
+          example: "Platform"
+        platform:
+          type: string
+          example: "PlayStation"
+    VideoGame:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Crash Bandicoot"
+        developer:
+          type: string
+          example: "Naughty Dog"
+        publisher:
+          type: string
+          example: "Sony Computer Entertainment"
+        year:
+          type: integer
+          example: 1996
+        rating:
+          type: string
+          example: "PEGI 3"
+        genre:
+          type: string
+          example: "Platform"
+        platform:
+          type: string
+          example: "PlayStation"
+        createdAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        updatedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+    AllVideoGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/VideoGame'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "User McUserson"
+        email:
+          type: string
+          example: "user@email.face"
+        phone:
+          type: string
+          example: "+1234567890"
+        createdAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        updatedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+    CreateUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "User McUserson"
+        email:
+          type: string
+          example: "user@email.face"
+        phone:
+          type: string
+          example: "+1234567890"
+    AllUsers:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+
+    Loan:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: "User McUserson"
+            email:
+              type: string
+              example: "user@email.face"
+            phone:
+              type: string
+              example: "+1234567890"
+            createdAt:
+              type: string
+              format: DateTime
+              example: "2023-03-14T11:01:56.633+00:00"
+            updatedAt:
+              type: string
+              format: DateTime
+              example: "2023-03-14T11:01:56.633+00:00"
+        videoGame:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            title:
+              type: string
+              example: "Crash Bandicoot"
+            developer:
+              type: string
+              example: "Naughty Dog"
+            publisher:
+              type: string
+              example: "Sony Computer Entertainment"
+            year:
+              type: integer
+              example: 1996
+            rating:
+              type: string
+              example: "PEGI 3"
+            genre:
+              type: string
+              example: "Platform"
+            platform:
+              type: string
+              example: "PlayStation"
+            createdAt:
+              type: string
+              format: DateTime
+              example: "2023-03-14T11:01:56.633+00:00"
+            updatedAt:
+              type: string
+              format: DateTime
+              example: "2023-03-14T11:01:56.633+00:00"
+        borrowedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        dueBy:
+          type: string
+          format: DateTime
+          example: "2023-04-15T11:01:56.633+00:00"
+        createdAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        updatedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        returned:
+          type: boolean
+          example: false
+
+    AllLoans:
+      type: array
+      items:
+        $ref: '#/components/schemas/Loan'
+    ReturnedLoan:
+      type: object
+      properties:
+        user:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: "User McUserson"
+            email:
+              type: string
+              example: "user@email.face"
+            phone:
+              type: string
+              example: "+1234567890"
+            createdAt:
+              type: string
+              format: DateTime
+              example: "2023-03-14T11:01:56.633+00:00"
+            updatedAt:
+              type: string
+              format: DateTime
+              example: "2023-03-14T11:01:56.633+00:00"
+        videoGame:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            title:
+              type: string
+              example: "Crash Bandicoot"
+            developer:
+              type: string
+              example: "Naughty Dog"
+            publisher:
+              type: string
+              example: "Sony Computer Entertainment"
+            year:
+              type: integer
+              example: 1996
+            rating:
+              type: string
+              example: "PEGI 3"
+            genre:
+              type: string
+              example: "Platform"
+            platform:
+              type: string
+              example: "PlayStation"
+            createdAt:
+              type: string
+              format: DateTime
+              example: "2023-03-14T11:01:56.633+00:00"
+            updatedAt:
+              type: string
+              format: DateTime
+              example: "2023-03-14T11:01:56.633+00:00"
+        borrowedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        dueBy:
+          type: string
+          format: DateTime
+          example: "2023-04-15T11:01:56.633+00:00"
+        createdAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        updatedAt:
+          type: string
+          format: DateTime
+          example: "2023-03-14T11:01:56.633+00:00"
+        returned:
+          type: boolean
+          example: true
