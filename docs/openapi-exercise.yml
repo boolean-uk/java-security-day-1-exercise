@@ -1,0 +1,396 @@
+openapi: 3.0.0
+info:
+  title: Video Game Library API
+  version: 1.0.0
+  description: API for managing a library of video games, users, and loans.
+servers:
+  - url: http://localhost:4000
+paths:
+  /videogames:
+    get:
+      summary: Retrieve all video games
+      operationId: getAllVideoGames
+      responses:
+        '200':
+          description: A list of video games
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VideoGame'
+    post:
+      summary: Add a new video game
+      operationId: addVideoGame
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+  /videogames/{id}:
+    get:
+      summary: Retrieve a video game by ID
+      operationId: getVideoGameById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the video game to retrieve
+      responses:
+        '200':
+          description: A single video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        '404':
+          description: Video game not found
+    put:
+      summary: Update a video game
+      operationId: updateVideoGame
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the video game to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        '200':
+          description: Updated video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        '404':
+          description: Video game not found
+    delete:
+      summary: Delete a video game
+      operationId: deleteVideoGame
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the video game to delete
+      responses:
+        '200':
+          description: Deleted video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        '404':
+          description: Video game not found
+  /loans:
+    get:
+      summary: Retrieve all loans
+      operationId: getAllLoans
+      responses:
+        '200':
+          description: A list of loans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Loan'
+    post:
+      summary: Add a new loan
+      operationId: addLoan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoan'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+  /loans/{id}:
+    get:
+      summary: Retrieve a loan by ID
+      operationId: getLoanById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the loan to retrieve
+      responses:
+        '200':
+          description: A single loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '404':
+          description: Loan not found
+    put:
+      summary: Update a loan
+      operationId: updateLoan
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the loan to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoan'
+      responses:
+        '200':
+          description: Updated loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '404':
+          description: Loan not found
+    delete:
+      summary: Delete a loan
+      operationId: deleteLoan
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the loan to delete
+      responses:
+        '200':
+          description: Deleted loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Loan'
+        '404':
+          description: Loan not found
+  /users:
+    get:
+      summary: Retrieve all users
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+    post:
+      summary: Add a new user
+      operationId: addUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /users/{id}:
+    get:
+      summary: Retrieve a user by ID
+      operationId: getUserById
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user to retrieve
+      responses:
+        '200':
+          description: A single user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    put:
+      summary: Update a user
+      operationId: updateUser
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    delete:
+      summary: Delete a user
+      operationId: deleteUser
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: ID of the user to delete
+      responses:
+        '200':
+          description: Deleted user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+
+components:
+  schemas:
+    CreateLoan:
+      type: object
+      properties:
+        user_id:
+          type: integer
+          example: 1
+        video_game_id:
+          type: integer
+          example: 1
+        date:
+          type: string
+          example: "2023-03-14"
+        returned:
+          type: boolean
+          example: false
+    Loan:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        user:
+          $ref: '#/components/schemas/User'
+        video_game:
+          $ref: '#/components/schemas/VideoGame'
+        date:
+          type: string
+          example: "2023-03-14"
+        returned:
+          type: boolean
+          example: false
+    CreateUser:
+      type: object
+      properties:
+        first_name:
+          type: string
+          example: "John"
+        last_name:
+          type: string
+          example: "Doe"
+        phone:
+          type: string
+          example: "123-456-7890"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        first_name:
+          type: string
+          example: "John"
+        last_name:
+          type: string
+          example: "Doe"
+        phone:
+          type: string
+          example: "123-456-7890"
+        email:
+          type: string
+          format: email
+          example: "john@example.com"
+    CreateVideoGame:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Super Mario Bros"
+        gameStudio:
+          type: string
+          example: "Nintendo"
+        ageRating:
+          type: string
+          example: "E (Everyone)"
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Platformer"
+    VideoGame:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Super Mario Bros"
+        gameStudio:
+          type: string
+          example: "Nintendo"
+        ageRating:
+          type: string
+          example: "E (Everyone)"
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Platformer"
