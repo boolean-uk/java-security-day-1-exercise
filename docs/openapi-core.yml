@@ -1,0 +1,153 @@
+openapi: 0.0.1
+info:
+  title: Video Game API
+  description: API for keeping track of video games
+  version: 1.0.0
+  contact:
+    name: Java Security, Day 1 Exercise
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: games
+
+paths:
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create a new game
+      description: Add a new game to the library
+      operationId: createGame
+      security:
+        - basicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Game created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '401':
+          description: Unauthorized
+    get:
+      tags:
+        - games
+      summary: Get all games
+      description: Retrieve a list of all games in the library
+      operationId: getGames
+      security:
+        - basicAuth: []
+      responses:
+        '200':
+          description: List of games retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+        '401':
+          description: Unauthorized
+  /games/{id}:
+    put:
+      tags:
+        - games
+      summary: Update a game
+      description: Update the information of a game by ID
+      operationId: updateGame
+      security:
+        - basicAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '200':
+          description: Game updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '401':
+          description: Unauthorized
+    delete:
+      tags:
+        - games
+      summary: Delete a game
+      description: Remove a game from the collection by ID
+      operationId: deleteGame
+      security:
+        - basicAuth: []
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Game deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '401':
+          description: Unauthorized
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    CreateGame:
+      type: object
+      required:
+        - title
+        - gameStudio
+        - ageRating
+        - numberOfPlayers
+        - genre
+      properties:
+        title:
+          type: string
+          example: "The Elder Scrolls: Morrowind"
+        gameStudio:
+          type: string
+          example: "Bethesda Game Studios"
+        ageRating:
+          type: string
+          example: "16+"
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Fantasy RPG"
+    Game:
+      allOf:
+        - $ref: '#/components/schemas/CreateGame'
+        - type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
