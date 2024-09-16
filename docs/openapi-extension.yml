@@ -1,0 +1,401 @@
+openapi: 3.1.0
+info:
+  title: Java Security day 1 exercise - Extension Criteria
+  description: Extension Criteria for the Java Security day 1 exercise
+  version: 0.2.3
+  contact:
+    name: Java Security day 1 exercise
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: games
+  - name: users
+  - name: loans
+paths:
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create a game
+      description: Create a new game.
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully created a new game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    get:
+      tags:
+        - games
+      summary: Get all games
+      description: Get a list of every game.
+      operationId: getGames
+      responses:
+        '200':
+          description: Get a list of all games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+  /games/{id}:
+    get:
+      tags:
+        - games
+      summary: Get a game
+      description: Get a specific game by their id
+      operationId: getSpecificGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get the specified game from the list given their ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: "No games with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    put:
+      tags:
+        - games
+      summary: Update a game
+      description: Update an existing game. For ease of implementation, all fields are required from the client.
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    delete:
+      tags:
+        - games
+      summary: Delete a game
+      description: Delete an existing game. When deleting data, it's useful to send the deleted record back to the client so they can re-create it if deletion was a mistake.
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+  /users:
+    post:
+      tags:
+        - users
+      summary: Create a user
+      description: Create a new user.
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Successfully created a new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    get:
+      tags:
+        - users
+      summary: Get all users
+      description: Get a list of every user.
+      operationId: getUsers
+      responses:
+        '200':
+          description: Get a list of all users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+  /users/{id}:
+    get:
+      tags:
+        - users
+      summary: Get a user
+      description: Get a specific user by their id
+      operationId: getSpecificUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get the specified user from the list given their ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: "No users with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: Update an existing user. For ease of implementation, all fields are required from the client.
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Successfully updated the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      description: Delete an existing user. When deleting data, it's useful to send the deleted record back to the client so they can re-create it if deletion was a mistake.
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+  /loans/users/{userId}/game/{gameId}:
+    post:
+      tags:
+        - loans
+      summary: Borrow a game
+      description: Borrow a game for a user.
+      operationId: borrowGame
+      parameters:
+        - name: userId
+          in: path
+          description: The ID of the user borrowing the game
+          required: true
+          schema:
+            type: integer
+        - name: gameId
+          in: path
+          description: The ID of the game to borrow
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully borrowed the game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameLoan'
+  /loans/{Id}:
+    put:
+      tags:
+        - loans
+      summary: Return a game
+      description: Return a borrowed game for a user.
+      operationId: returnGame
+      parameters:
+        - name: Id
+          in: path
+          description: The ID of the loan to return
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully returned the game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GameLoan'
+  /loans/games/{id}:
+    get:
+      tags:
+        - loans
+      summary: Get all users that have borrowed a game
+      description: Get a list of every user that has borrowed a specific game.
+      operationId: getUsersBorrowingGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to retrieve users for
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+            description: Get a list of all users that have borrowed the specified game
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/AllUsers'
+  /loans/users/{id}:
+    get:
+      tags:
+        - loans
+      summary: Get all games that a user has borrowed
+      description: Get a list of every game that a specific user has borrowed.
+      operationId: getGamesBorrowedByUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to retrieve games for
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get a list of all games that the specified user has borrowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+
+components:
+  schemas:
+    CreateGame:
+      type: object
+      required: [title, gameStudio, ageRating, numberOfPlayers, genre]
+      properties:
+        title:
+          type: string
+          example: "The Legend of Zelda: Breath of the Wild"
+        gameStudio:
+          type: string
+          example: "Nintendo"
+        ageRating:
+          type: integer
+          example: 12
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Action-adventure"
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "The Legend of Zelda: Breath of the Wild"
+        gameStudio:
+          type: string
+          example: "Nintendo"
+        ageRating:
+          type: integer
+          example: 12
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Action-adventure"
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
+    CreateUser:
+      type: object
+      required: [name, email]
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          example: "john.doe@example.com"
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "John Doe"
+        email:
+          type: string
+          example: "john.doe@example.com"
+    AllUsers:
+      type: array
+      items:
+        $ref: '#/components/schemas/User'
+    GameLoan:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        gameId:
+          type: integer
+          example: 1
+    Error404:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "No games with that id were found"

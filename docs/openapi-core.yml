@@ -1,0 +1,170 @@
+openapi: 3.1.0
+info:
+  title: Java Security day 1 exercise - Core Criteria
+  description: Core Criteria for the Java Security day 1 exercise
+  version: 0.2.3
+  contact:
+    name: Java Security day 1 exercise
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: games
+paths:
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create a game
+      description: Create a new game.
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully created a new game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    get:
+      tags:
+        - games
+      summary: Get all games
+      description: Get a list of every game.
+      operationId: getGames
+      responses:
+        '200':
+          description: Get a list of all games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+  /games/{id}:
+    get:
+      tags:
+        - games
+      summary: Get a game
+      description: Get a specific game by their id
+      operationId: getSpecificGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get the specified game from the list given their ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: "No games with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    put:
+      tags:
+        - games
+      summary: Update a game
+      description: Update an existing game. For ease of implementation, all fields are required from the client.
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    delete:
+      tags:
+        - games
+      summary: Delete a game
+      description: Delete an existing game. When deleting data, it's useful to send the deleted record back to the client so they can re-create it if deletion was a mistake.
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+components:
+  schemas:
+    CreateGame:
+      type: object
+      required: [title, gameStudio, ageRating, numberOfPlayers, genre]
+      properties:
+        title:
+          type: string
+          example: "The Legend of Zelda: Breath of the Wild"
+        gameStudio:
+          type: string
+          example: "Nintendo"
+        ageRating:
+          type: integer
+          example: 12
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Action-adventure"
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "The Legend of Zelda: Breath of the Wild"
+        gameStudio:
+          type: string
+          example: "Nintendo"
+        ageRating:
+          type: integer
+          example: 12
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Action-adventure"
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
+    Error404:
+        type: object
+        properties:
+            error:
+            type: string
+            example: "No games with that id were found"
