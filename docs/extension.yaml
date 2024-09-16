@@ -1,0 +1,486 @@
+openapi: 3.1.0
+info:
+  title: Java security day 1
+  description: Extension Criteria for Java Security
+  version: 0.2.3
+  contact:
+    name: Java Security
+
+servers:
+  - url: http://localhost:4000
+
+tags:
+  - name: users
+  - name: games
+  - name: loans
+
+paths:
+  /users:
+    post:
+      tags:
+        - users
+      summary: Create a user
+      description: Create a new user account.
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Successfully created a new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleUser'
+        '400':
+          description: Could not create new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+    get:
+      tags:
+        - users
+      summary: Get all users
+      description: Get a list of every user.
+      operationId: getUsers
+      responses:
+        '200':
+          description: Successfully returned a list of all users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+
+  /users/{id}:
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: Update an existing user. If any field is not provided, the original value should not be changed.
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+      responses:
+        '201':
+          description: Successfully updated the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleUser'
+        '400':
+          description: Could not update the user, please check all fields are correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: No user with that ID found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      description: Delete an existing user.
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleUser'
+        '404':
+          description: No user with that ID found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create a game
+      description: Create a new game.
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully created a new game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleGame'
+        '400':
+          description: Could not create a new game, please check all fields are correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+    get:
+      tags:
+        - games
+      summary: Get all games
+      description: Get a list of every game.
+      operationId: getGames
+      responses:
+        '200':
+          description: Successfully returned a list of all games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+
+  /games/{id}:
+    put:
+      tags:
+        - games
+      summary: Update a game
+      description: Update an existing game.
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGame'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleGame'
+        '400':
+          description: Could not update the specified game, please check all fields are correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: No game with that id found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - games
+      summary: Delete a game
+      description: Delete an existing game.
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleGame'
+        '404':
+          description: No game with that id found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+  /games/{gameId}/users/{userId}:
+    post:
+      tags:
+        - loans
+      summary: Create a loan
+      description: Create a new loan for a particular game and user.
+      operationId: createLoan
+      parameters:
+        - name: gameId
+          in: path
+          description: The ID of the game to create the loan for
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          description: The ID of the user to create the loan for
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLoan'
+      responses:
+        '201':
+          description: Successfully created a loan for the loan and user specified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleLoan'
+        '404':
+          description: No game or user with those ids found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    get:
+      tags:
+        - loans
+      summary: Get all loans
+      description: Get a list of every loan a game has booked for a user.
+      operationId: getLoans
+      parameters:
+        - name: gameId
+          in: path
+          description: The ID of the game the loan is for
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          description: The ID of the user the loan is for
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully returned a list of all loans for a given game and user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllLoans'
+        '404':
+          description: No loan found for the game and user with those ids found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+  /games/{gameId}/users/{userId}/{id}:
+    put:
+      tags:
+        - loans
+      summary: Update a loan
+      description: Update an existing loan.
+      operationId: updateLoan
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the loan to update
+          required: true
+          schema:
+            type: integer
+        - name: gameId
+          in: path
+          description: The ID of the game the loan is for
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          description: The ID of the user the loan is for
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLoan'
+      responses:
+        '201':
+          description: Successfully updated the specified loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleLoan'
+        '400':
+          description: Could not update the loan, please check all fields are correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: No loan with that id found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - loans
+      summary: Delete a loan
+      description: Delete an existing loan.
+      operationId: deleteLoan
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the loan to delete
+          required: true
+          schema:
+            type: integer
+        - name: gameId
+          in: path
+          description: The ID of the game the loan is for
+          required: true
+          schema:
+            type: integer
+        - name: userId
+          in: path
+          description: The ID of the user the loan is for
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified loan
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleLoan'
+        '404':
+          description: No loan with that id found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+components:
+  schemas:
+    SingleUser:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    AllUsers:
+      type: array
+      items:
+        $ref: '#/components/schemas/SingleUser'
+    CreateUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Ivan Turina"
+    UpdateUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "Ivan Obolo"
+    SingleGame:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        publisher:
+          type: string
+        genre:
+          type: string
+        year:
+          type: integer
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/SingleGame'
+    CreateGame:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "EAFC 25"
+        publisher:
+          type: string
+          example: "EA sports"
+        genre:
+          type: string
+          example: "Sports"
+        year:
+          type: integer
+          example: 2024
+    UpdateGame:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "EAFC 25"
+        publisher:
+          type: string
+          example: "EA sports"
+        genre:
+          type: string
+          example: "Sports"
+        year:
+          type: integer
+          example: 2024
+    SingleLoan:
+      type: object
+      properties:
+        id:
+          type: integer
+        gameId:
+          type: integer
+        userId:
+          type: integer
+    AllLoans:
+      type: array
+      items:
+        $ref: '#/components/schemas/SingleLoan'
+    CreateLoan:
+      type: object
+      properties:
+    UpdateLoan:
+      type: object
+      properties:
+    Error400:
+      type: object
+      properties:
+        message:
+          type: string
+    Error404:
+      type: object
+      properties:
+        message:
+          type: string
