@@ -1,0 +1,417 @@
+openapi: 3.1.0
+info:
+  title: Video Game Library API
+  description: API to manage video games in a library.
+  version: 0.2.3
+  contact:
+    name: Video Game Library Support
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: videoGames
+  - name: borrowings
+  - name: users
+paths:
+  /videoGames:
+    post:
+      tags:
+        - videoGames
+      summary: Add a new video game
+      description: Add a new video game to the library.
+      operationId: createVideoGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateVideoGame'
+      responses:
+        '201':
+          description: Successfully added a new video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        '400':
+          description: Could not add the video game, please check all fields are correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+    get:
+      tags:
+        - videoGames
+      summary: Get all video games
+      description: Get a list of all video games in the library.
+      operationId: getVideoGames
+      responses:
+        '200':
+          description: Successfully returned a list of all video games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllVideoGames'
+
+  /videoGames/{id}:
+    put:
+      tags:
+        - videoGames
+      summary: Update a video game
+      description: Update the details of an existing video game. Only provide the fields to be updated.
+      operationId: updateVideoGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateVideoGame'
+      responses:
+        '200':
+          description: Successfully updated the video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        '404':
+          description: Video game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - videoGames
+      summary: Delete a video game
+      description: Remove an existing video game from the library.
+      operationId: deleteVideoGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the video game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the video game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGame'
+        '404':
+          description: Video game not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+  /users:
+    post:
+      tags:
+        - users
+      summary: Add a new user
+      description: Create a new user in the system.
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Successfully added a new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid user data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+    get:
+      tags:
+        - users
+      summary: Get all users
+      description: Retrieve a list of all users in the system.
+      operationId: getUsers
+      responses:
+        '200':
+          description: Successfully returned list of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllUsers'
+
+  /users/{id}:
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: Update a user's information by ID.
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+      responses:
+        '200':
+          description: Successfully updated the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      description: Delete a user by ID.
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+  /users/{id}/borrowings:
+    post:
+      tags:
+        - borrowings
+      summary: Record a borrowing transaction
+      description: Add a record when a user borrows a video game.
+      operationId: borrowGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user borrowing the game
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BorrowGame'
+      responses:
+        '201':
+          description: Successfully recorded the borrowing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Borrowing'
+        '400':
+          description: Invalid data for borrowing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+    get:
+      tags:
+        - borrowings
+      summary: Get borrowing history for a user
+      description: Get the list of games a user has borrowed.
+      operationId: getUserBorrowings
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user whose borrowing history is being retrieved
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully returned borrowing history
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllBorrowings'
+        '404':
+          description: User or borrowing history not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+components:
+  schemas:
+    CreateVideoGame:
+      type: object
+      required: [title, gameStudio, rating, numberOfPlayers, genre]
+      properties:
+        title:
+          type: string
+          example: "The Witcher 3: Wild Hunt"
+        gameStudio:
+          type: string
+          example: "CD Projekt Red"
+        rating:
+          type: integer
+          example: 7
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "RPG"
+    UpdateVideoGame:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "The Witcher 3: Wild Hunt"
+        gameStudio:
+          type: string
+          example: "CD Projekt Red"
+        rating:
+          type: integer
+          example: 7
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "RPG"
+    VideoGame:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "The Witcher 3: Wild Hunt"
+        gameStudio:
+          type: string
+          example: "CD Projekt Red"
+        rating:
+          type: integer
+          example: 7
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "RPG"
+    AllVideoGames:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/VideoGame'
+    CreateUser:
+      type: object
+      required: [name, phoneNumber]
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        phoneNumber:
+          type: string
+          example: "+1-800-555-1234"
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "John Doe"
+        phoneNumber:
+          type: string
+          example: "+1-800-555-1234"
+    AllUsers:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    UpdateUser:
+      type: object
+      properties:
+        name:
+          type: string
+          example: "John Doe"
+        phoneNumber:
+          type: string
+          example: "+1-800-555-1234"
+    BorrowGame:
+      type: object
+      required: [videoGameId]
+      properties:
+        videoGameId:
+          type: integer
+          example: 1
+    Borrowing:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        userId:
+          type: integer
+          example: 1
+        videoGameId:
+          type: integer
+          example: 1
+        borrowedAt:
+          type: string
+          format: date-time
+          example: "2023-09-01T10:00:00Z"
+        returnedAt:
+          type: string
+          format: date-time
+          example: "2023-09-15T10:00:00Z"
+    AllBorrowings:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Borrowing'
+    Error400:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Invalid request data"
+    Error404:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Resource not found"
