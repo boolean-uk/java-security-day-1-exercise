@@ -1,0 +1,201 @@
+openapi: 3.1.0
+info:
+  title: Java API, JPA and Hibernate Part 2 - Core Criteria
+  description: Core Criteria for Java API, JPA and Hibernate Part 2
+  version: 0.2.3
+  contact:
+    name: JPA and Hibernate Part 2 Exercise
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: games
+paths:
+  /games:
+    post:
+      tags:
+        - games
+
+      summary: Create game
+      description: Create a new games
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully created a new author
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: "Could not create game, please check all required fields are correct."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+    get:
+      tags:
+        - games
+      summary: Get Games
+      description: Get all of the games in the list
+      operationId: getGames
+      responses:
+        '200':
+          description: Successfully get a list of all of the games in the list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+  /games/{id}:
+    get:
+      tags:
+        - games
+      summary: Get an game
+      description: Get a specific author by their id
+      operationId: getSpecificGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the author to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get the specified game from the list given their ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: "No game with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    put:
+      tags:
+        - games
+      summary: Update an game
+      description: Update the specified game
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '400':
+          description: "Could not update the game, please check all required fields are correct."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: "No authors with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - games
+      summary: Delete an game
+      description: Delete the specified game
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+        '404':
+          description: "No games with that id were found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+components:
+  schemas:
+    CreateGame:
+      type: object
+      required: [title, gameStudio, ageRating, numberOfPlayers, genre]
+      properties:
+        title:
+          type: string
+          example: "Cyberpunk 2077"
+        gameStudio:
+          type: string
+          example: "Asimov games"
+        ageRating:
+          type: integer
+          example: 12
+        numberOfPlayers:
+          type: integer
+          example: 10
+        genre:
+            type: string
+            example: "RPG"
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Cyberpunk 2077"
+        gameStudio:
+          type: string
+          example: "Asimov games"
+        ageRating:
+          type: integer
+          example: 12
+        numberOfPlayers:
+          type: integer
+          example: 10
+        genre:
+          type: string
+          example: "RPG"
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
+    Error400:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "bad request"
+    Error404:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "not found"
