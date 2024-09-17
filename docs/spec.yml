@@ -1,0 +1,86 @@
+# THIS SPEC IS WRONG
+openapi: 3.1.0
+info:
+  title: java-security-day-1-exercise
+  description: Spec for exercise
+  version: 1.0.0
+  contact:
+    name: java-security-day-1-exercise
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: users
+paths:
+  /users:
+    post:
+      tags:
+        - employees
+      summary: Create a new employee
+      description: Add a new employee to our list of available employees
+      operationId: createEmployee
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEmployee'
+      responses:
+        '201':
+          description: Successfully created a new Employee
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employee'
+    get:
+      tags:
+        - employees
+      summary: Get all employees
+      description: Get all of the employees from our list
+      operationId: getEmployees
+      responses:
+        '200':
+          description: Get a list of all employees
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllEmployees'
+
+components:
+  schemas:
+    CreateEmployee:
+      type: object
+      required: [name, jobName, salaryGrade, department]
+      properties:
+        name:
+          type: string
+          example: "Dave Ames"
+        jobName:
+          type: string
+          example: "Java Developer"
+        salaryGrade:
+          type: string
+          example: "8"
+        department:
+          type: string
+          example: "Software Development"
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Dave Ames"
+        age:
+          type: integer
+          example: 50
+        borrowedGames:
+          type: array
+          items:
+            type: Game
+            example: "Software Development"
+    AllEmployees:
+      type: array
+      items:
+        $ref: '#/components/schemas/Employee'
