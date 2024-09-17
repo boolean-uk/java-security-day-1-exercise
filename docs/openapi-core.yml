@@ -1,0 +1,159 @@
+openapi: 3.1.0
+info:
+  title: Java Security Day 1 Exercise - Core Criteria
+  description: Core Criteria for Java Security Day 1 Exercise
+  version: 0.2.3
+  contact:
+    name: Java Security Day 1 Exercise
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: games
+paths:
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create a new game
+      description: Create a new game
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully created a new game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    get:
+      tags:
+        - games
+      summary: Get Games
+      description: Get all games
+      operationId: getGames
+      responses:
+        '200':
+          description: Successfully return a list of all games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+  /games/{id}:
+    get:
+      tags:
+        - games
+      summary: Get an game
+      description: Get a single game by id
+      operationId: getSpecificGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to retrieve
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Get the specified game from the list given ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    put:
+      tags:
+        - games
+      summary: Update Game
+      description: Update the game specified by the ID
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully update the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+    delete:
+      tags:
+        - games
+      summary: Delete Game
+      description: Delete the specified game
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+components:
+  schemas:
+    CreateGame:
+      type: object
+      required: [title, studio, rating, player_count, genre]
+      properties:
+        title:
+          type: string
+          example: "Title"
+        studio:
+          type: string
+          example: "studio"
+        rating:
+          type: integer
+          example: 1
+        player_count:
+          type: integer
+          example: 2
+        genre:
+          type: string
+          example: "Genre"
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Title"
+        studio:
+          type: string
+          example: "Studio"
+        rating:
+          type: integer
+          example: 1
+        player_count:
+          type: integer
+          example: 2
+        genre:
+          type: string
+          example: "Genre"
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
+
+
