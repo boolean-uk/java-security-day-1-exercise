@@ -1,0 +1,238 @@
+openapi: 3.1.0
+info:
+  title: Java Security Day 1 Exercise
+  description: Extension Criteria for Java API Cinema Challenge
+  version: 0.2.3
+  contact:
+    name: Cinema Booking Challenge
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: videogames
+paths:
+  /games:
+    post:
+      tags:
+        - videogames
+      summary: Create a game
+      description: Create a new video game.
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Successfully created a new game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleGame'
+        '400':
+          description: Could not create a new game, please check all fields are correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+    get:
+      tags:
+        - videogames
+      summary: Get all games
+      description: Get a list of every game.
+      operationId: getGames
+      responses:
+        '200':
+          description: Successfully returned a list of all games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+  /games/{id}:
+    put:
+      tags:
+        - videogames
+      summary: Update a game
+      description: Update an existing game. If any field is not provided, the original value should not be changed. Any combination of fields can be updated.
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateGame'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleGame'
+        '400':
+          description: Could not create a new game, please check all fields are correct
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: No game with that ID found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - videogames
+      summary: Delete a game
+      description: Delete an existing game. When deleting data, it's useful to send the deleted record back to the client so they can re-create it if deletion was a mistake.
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleGame'
+        '404':
+          description: No game with that ID found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+
+components:
+  schemas:
+    CreateGame:
+      type: object
+      required: [name, email, phone]
+      properties:
+        title:
+          type: string
+          example: "Game name"
+        gameStudio:
+          type: string
+          example: "Game Studio"
+        ageRating:
+          type: integer
+          example: 10
+        numberOfPlayers:
+          type: integer
+          example: 8
+        genre:
+          type: string
+          example: "genre"
+    UpdateGame:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Game name"
+        gameStudio:
+          type: string
+          example: "Game Studio"
+        ageRating:
+          type: integer
+          example: 10
+        numberOfPlayers:
+          type: integer
+          example: 8
+        genre:
+          type: string
+          example: "genre"
+    SingleGame:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            title:
+              type: string
+              example: "Game name"
+            gameStudio:
+              type: string
+              example: "Game Studio"
+            ageRating:
+              type: integer
+              example: 10
+            numberOfPlayers:
+              type: integer
+              example: 8
+            genre:
+              type: string
+              example: "genre"
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Game name"
+        gameStudio:
+          type: string
+          example: "Game Studio"
+        ageRating:
+          type: integer
+          example: 10
+        numberOfPlayers:
+          type: integer
+          example: 8
+        genre:
+          type: string
+          example: "genre"
+    AllGames:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Game'
+    Error400:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "bad request"
+    Error404:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "not found"
