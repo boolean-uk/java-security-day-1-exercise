@@ -1,0 +1,166 @@
+openapi: 3.1.0
+info:
+  title: Video Game Library API
+  description: API for managing a library of video games, allowing for tracking of game details.
+  version: 1.0.0
+  contact:
+    name: Video Game Library API
+
+servers:
+  - url: http://localhost:4000
+
+components:
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+
+  schemas:
+    CreateGame:
+      type: object
+      required: [title, gameStudio, ageRating, numberOfPlayers, genre]
+      properties:
+        title:
+          type: string
+          example: "The Witcher 3"
+        gameStudio:
+          type: string
+          example: "CD Projekt Red"
+        ageRating:
+          type: string
+          example: "18+"
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Action RPG"
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "The Witcher 3"
+        gameStudio:
+          type: string
+          example: "CD Projekt Red"
+        ageRating:
+          type: string
+          example: "18+"
+        numberOfPlayers:
+          type: integer
+          example: 1
+        genre:
+          type: string
+          example: "Action RPG"
+    AllGames:
+      type: array
+      items:
+        $ref: '#/components/schemas/Game'
+
+security:
+  - basicAuth: []
+
+paths:
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create a new game
+      description: Add a new video game to the library
+      operationId: createGame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '201':
+          description: Game successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+    get:
+      tags:
+        - games
+      summary: Get a list of games
+      description: Retrieve a list of all games
+      operationId: getGames
+      responses:
+        '200':
+          description: Successfully returned a list of games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AllGames'
+
+  /games/{id}:
+    get:
+      tags:
+        - games
+      summary: Get game by ID
+      description: Retrieve details of a specific game by its ID
+      operationId: getGameById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Game details successfully returned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+    put:
+      tags:
+        - games
+      summary: Update a game by ID
+      description: Update the details of an existing game by ID
+      operationId: updateGame
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateGame'
+      responses:
+        '200':
+          description: Game successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
+
+    delete:
+      tags:
+        - games
+      summary: Delete a game by ID
+      description: Remove a game from the library by ID
+      operationId: deleteGame
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Game successfully deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Game'
