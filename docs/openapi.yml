@@ -1,0 +1,489 @@
+openapi: 3.1.0
+info:
+  title: Game library
+  description: Core Criteria for java-security-day-1
+  version: "0.1"
+  contact:
+    name: Game library
+
+servers:
+  - url: http://localhost:4000
+tags:
+  - name: games
+  - name: users
+  - name: lends
+
+paths:
+  /games:
+    post:
+      tags:
+        - games
+      summary: Create a game
+      description: Create a new game.
+      operationId: creategame
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Creategame'
+      responses:
+        '201':
+          description: Successfully created a new game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleGame'
+        '403':
+          description: Could not create game; user not logged in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+    get:
+      tags:
+        - games
+      summary: Get all games
+      description: Get a list of every game.
+      operationId: getgames
+      responses:
+        '200':
+          description: Get a list of all games
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Allgames'
+        '403':
+          description: Could not create game; user not logged in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+  /games/{id}:
+    put:
+      tags:
+        - games
+      summary: Update a game
+      description: Update an existing game. For ease of implementation, all fields are required from the client.
+      operationId: updategame
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Creategame'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleGame'
+        '403':
+          description: Could not create game; user not logged in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: Could not map given ID to a game.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+    delete:
+      tags:
+        - games
+      summary: Delete a game
+      description: Delete an existing games.
+      operationId: deletegames
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the game to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleGame'
+        '403':
+          description: Could not delete game; user/admin not logged in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: Could not map given ID to a game.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+  /users:
+    post:
+      tags:
+        - users
+      summary: Create a user
+      description: Create a new user.
+      operationId: createuser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Successfully created a new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleUser'
+        '403':
+          description: Could not create user; user/admin not logged in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+    get:
+      tags:
+        - users
+      summary: Get all users
+      description: Get a list of every game.
+      operationId: getusers
+      responses:
+        '200':
+          description: Get a list of all users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Allusers'
+        '403':
+          description: Could not create user; user/admin not logged in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+  /users/{id}:
+    put:
+      tags:
+        - users
+      summary: Update a user
+      description: Update an existing user-
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to update
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: Successfully updated the specified game
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleUser'
+        '403':
+          description: Could not create user; user/admin not logged in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: Could not map given ID to a user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+
+    delete:
+      tags:
+        - users
+      summary: Delete a user
+      description: Delete an existing user.
+      operationId: deleteuser
+      parameters:
+        - name: id
+          in: path
+          description: The ID of the user to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successfully deleted the specified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleUser'
+        '403':
+          description: Could not create user; user/admin not logged in.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error403'
+        '404':
+          description: Could not map given ID to a user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+  /lend:
+    post:
+      tags:
+        - lends
+      summary: Register a new game for the user to borrow.
+      description: Given a game and user, register the user to borrow the game.
+      operationId: borrowRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BorrowRequest'
+      responses:
+        '201':
+          description: Successfully created a new borrow
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleUser'
+        '400':
+          description: Given item is already lent out.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error400'
+        '404':
+          description: Could not map given IDs to a user or a game.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+  /lend/return:
+    post:
+      tags:
+        - lends
+      summary: Make the user return the given game.
+      description: Given a game and user, make the user return the game.
+      operationId: returnRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BorrowRequest'
+      responses:
+        '201':
+          description: Successfully returned the game.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SingleUser'
+        '404':
+          description: Could not map given IDs to a borrowing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error404'
+
+
+components:
+  schemas:
+    Creategame:
+      type: object
+      required: [ title, genre, gameStudio, ageRating, numberOfPlayers ]
+      properties:
+        title:
+          type: string
+          example: "Counter Strike"
+        genre:
+          type: string
+          example: "FPS"
+        gameStudio:
+          type: string
+          example: "Valve"
+        ageRating:
+          type: integer
+          example: 16
+        numberOfPlayers:
+          type: integer
+          example: 10
+    Game:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Counter Strike"
+        genre:
+          type: string
+          example: "FPS"
+        gameStudio:
+          type: string
+          example: "Valve"
+        ageRating:
+          type: integer
+          example: 16
+        numberOfPlayers:
+          type: integer
+          example: 10
+    SingleGame:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            title:
+              type: string
+              example: "Counter Strike"
+            genre:
+              type: string
+              example: "FPS"
+            gameStudio:
+              type: string
+              example: "Valve"
+            ageRating:
+              type: integer
+              example: 16
+            numberOfPlayers:
+              type: integer
+              example: 10
+    Allgames:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Game'
+
+    CreateUser:
+      type: object
+      required: [ name, username, email ]
+      properties:
+        name:
+          type: string
+          example: "Max Olofsson"
+        username:
+          type: string
+          example: "max1337"
+        email:
+          type: string
+          example: "email@example.com"
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Max Olofsson"
+        username:
+          type: string
+          example: "max1337"
+        email:
+          type: string
+          example: "email@example.com"
+    SingleUser:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: object
+          properties:
+            id:
+              type: integer
+              example: 1
+            name:
+              type: string
+              example: "Max Olofsson"
+            username:
+              type: string
+              example: "max1337"
+            email:
+              type: string
+              example: "email@example.com"
+    Allusers:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "success"
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+    Error403:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "forbidden"
+    Error404:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "not found"
+    Error400:
+      type: object
+      properties:
+        status:
+          type: string
+          example: "error"
+        data:
+          type: object
+          properties:
+            message:
+              type: string
+              example: "game already borrowed"
+    BorrowRequest:
+      type: object
+      properties:
+        userId:
+          type: integer
+          example: 1
+        gameId:
+          type: integer
+          example: 1
+        
