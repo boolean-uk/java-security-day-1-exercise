@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" lang="en">
+    <head>
+        <title>Game Library API</title>
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: #f4f4f4;
+                text-align: center;
+                margin: 10% auto;
+                max-width: 300px;
+            }
+            label {
+                display: block;
+                margin-bottom: 8px;
+            }
+            input {
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 12px;
+                box-sizing: border-box;
+            }
+            div.alert {
+                background-color: #f44336;
+                color: white;
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+        </style>
+    </head>
+    <body>
+        <form th:action="@{/login}" method="post">
+            <div><label> Username: <input type="text" name="username"/> </label></div>
+            <div><label> Password: <input type="password" name="password"/> </label></div>
+            <div><input type="submit" value="Sign In"/></div>
+        </form>
+        <div th:if="${param.error}" class="alert">
+            Invalid username or password
+        </div>
+        <div th:if="${param.logout}" class="alert">
+            You have been logged out
+        </div>
+    </body>
+</html>
